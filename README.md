@@ -1,7 +1,5 @@
 ## Desafío de construcción del LiterAlura
 
-![image](https://github.com/tromenArarat/libroracle/assets/3432106/0f56edb8-ec85-45f4-99b6-4f062d793b0c)
-
 <h3>Descripción del proyecto</h3>
 
 Consumo de API [Gutendex](https://gutendex.com/) para la Formación en Desarrollo Backend de #AluraLatam y #OracleNextEducation
@@ -38,10 +36,3 @@ Los libros se buscarán a través de una API específica.
 - Spring Data JPA
 - PostgreSQL Driver
 
-![image](https://github.com/tromenArarat/libroracle/assets/3432106/83d1bac0-9468-4fa1-b94d-99b2717211a3)
-
-
-## Profesora
-
-| [<img src="https://avatars.githubusercontent.com/u/91544872?v=4" width=115><br><sub>Génesys Rondón</sub>](https://github.com/genesysaluralatam) |
-| :---: |
