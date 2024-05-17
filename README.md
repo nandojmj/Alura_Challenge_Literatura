@@ -1,4 +1,4 @@
-# Open Challenge Backend ONE - Conversor de Monedas
+# Open Challenge Backend ONE - LITERATURA
  ***ONE | Fase 3 - Especialización Back-End  G6 Alura - Oracle Next Education***
 
 [![Alura Latam](https://img.shields.io/badge/Alura-Latam-blue?style=flat)](https://www.aluracursos.com/)
