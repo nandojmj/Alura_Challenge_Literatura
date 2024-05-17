@@ -9,31 +9,33 @@ import java.util.List;
 
 public class ConvierteDatos implements IConvierteDatos {
     private ObjectMapper objectMapper = new ObjectMapper();
+    // Método para obtener un objeto de tipo T a partir de un JSON
     @Override
     public <T> T obtenerDatos(String json, Class<T> clase) {
         try {
-            // Parse JSON string to JsonNode
+            // Parsea el JSON a un JsonNode
             JsonNode rootNode = objectMapper.readTree(json);
 
-            // Get the results array
+            // Obtiene el array de resultados
             JsonNode resultsArray = rootNode.get("results");
 
-            // If results array is not null and has at least one element
+            // Si el array de resultados no es nulo y tiene al menos un elemento
             if (resultsArray != null && resultsArray.size() > 0) {
-                // Get the first object in the results array
+                // Obtiene el primer objeto en el array de resultados
                 JsonNode firstResult = resultsArray.get(0);
-
-                // Convert the first result to the specified class
+                // Convierte el primer resultado a la clase especificada
                 return objectMapper.treeToValue(firstResult, clase);
             } else {
-                // Handle case where no results were found
+                // Maneja el caso donde no se encontraron resultados
                 throw new RuntimeException("No se encontraron resultados en el JSON.");
             }
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
     }
+    // Método para obtener una lista de objetos de tipo T a partir de un JSON
     @Override
     public <T> List<T> obtenerDatosArray(String json, Class<T> clase) {
         try {
