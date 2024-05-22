@@ -944,13 +944,37 @@ Para ejecutar el proyecto, sigue estos pasos:
 
 ![Captura](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/5c211392-b33f-49c2-a588-36cafdf82f12)
 
+
+![1](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/a8d60904-3d5a-41fb-9eac-f35dc739e0dc)
+
+![2](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/70528498-d91e-4d69-8ec0-6cf2a16360c3)
+
+![3](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/7a41aa97-8f3e-4897-8519-686dd002d8db)
+
+![5](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/7b6aaf16-f314-46aa-a0a6-4159fb7a756e)
+
+![6](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/a8e42a5c-bde8-4442-94ab-9ee23466d081)
+
+![7](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/cb5655bb-1251-4ae4-882a-f5f1b21570a2)
+
+![8](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/b2bc4a2f-31e3-49ad-a03b-2edd4186fab7)
+
+![9](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/bc1abd48-677d-4416-b949-3ea37787d7bf)
+
+![10](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/f01a39e3-2190-4dea-9974-11bfb268eefe)
+
+
 &nbsp;
 ![consultaliteraturapostgresql](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/4432d9d9-4227-4e17-b202-2b198a29d7d9)
 
 &nbsp;
 
+![BDLIBROS](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/92ae3f05-4e19-4177-8888-a17a70131b3c)
 
-![ ](https://github.com/nandojmj/conversor_prueba/blob/main/recursos/images/Captura.png)  
+&nbsp;
+
+![BDAUTORES](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/770e1719-34c0-44a9-8ae2-036a6a35429d)
+
 
 &nbsp;
 
@@ -964,6 +988,11 @@ Para ejecutar el proyecto, sigue estos pasos:
 &nbsp;
 
 ![Literatura_postman_Español](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/af2e8e92-517d-4bc9-a9bd-3b020c64ce46)
+
+&nbsp;
+
+![pg1francesl](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/73fb0446-bf88-439e-acbb-7212bd580368)
+
 
 
 
