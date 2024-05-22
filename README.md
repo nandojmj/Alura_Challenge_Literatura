@@ -16,9 +16,9 @@ Los pasos solicitados para completar este desafío:
 1.  Configurando el entorno Java y Spring
 2.	Conociendo la API para traer datos
 3.	Construyendo una solicitud de API
-3.1	Construyendo el Cliente para Solicitudes (HttpClient)
-3.2	Construyendo la Solicitud (HttpRequest)
-3.3	Construyendo la la Respuesta (HttpResponse)
+- 3.1	Construyendo el Cliente para Solicitudes (HttpClient)
+- 3.2	Construyendo la Solicitud (HttpRequest)
+- 3.3	Construyendo la la Respuesta (HttpResponse)
 4.	Analizando la respuesta en formato JSON
 5.	Convertiendo los datos
 6.	Interactuando con el usuario
@@ -29,10 +29,10 @@ Los pasos solicitados para completar este desafío:
 11.  Listando autores vivos en determinado año
 12. Hacer un Readme.md
 13. Extra (Opcional)
-    13.1 Generando estadísticas
-    13.2 Top 10 libros más descargados
-    13.3 Buscar autor por nombre
-    13.4 Listar autores con otras consultas
+- 13.1 Generando estadísticas
+- 13.2 Top 10 libros más descargados
+- 13.3 Buscar autor por nombre
+- 13.4 Listar autores con otras consultas
     
    
 &nbsp;
