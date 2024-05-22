@@ -29,10 +29,10 @@ Los pasos solicitados para completar este desafío:
 11.  Listando autores vivos en determinado año
 12. Hacer un Readme.md
 13. Extra (Opcional)
-    12.1 Generando estadísticas
-    12.2 Top 10 libros más descargados
-    12.3 Buscar autor por nombre
-    12.3 Listar autores con otras consultas
+    13.1 Generando estadísticas
+    13.2 Top 10 libros más descargados
+    13.3 Buscar autor por nombre
+    13.4 Listar autores con otras consultas
     
    
 &nbsp;
