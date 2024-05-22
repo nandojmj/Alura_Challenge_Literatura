@@ -7,9 +7,9 @@
 [![Static Badge](https://img.shields.io/badge/API-Exchange_Rate_API-%23e90000?style=flat)](https://www.exchangerate-api.com/docs/java-currency-api)
 [![Static Badge](https://img.shields.io/badge/test-status-%23009929?logo=github)](#)
 [![Static Badge](https://img.shields.io/badge/license-MIT-blue)](#)
-![Endpoint Badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fhits.dwyl.com%2Fnandojmj%2FAlura_Challenge_Conversor_de_Moneda.json&style=flat&logo=github&color=brightgreen)
+![Endpoint Badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fhits.dwyl.com%2Fnandojmj%2FAlura_Challenge_Literatura.json&style=flat&logo=github&color=brightgreen)
 
-Este es un desafío de la Especialización __Back-End G6 Alura - Oracle Next Education.__ Consiste en desarrollar un Conversor de Monedas en lenguaje Java, donde se realizarán solicitudes a una API de tasas de cambio para manipular datos JSON. Finalmente, se debe filtrar y mostrar las monedas de interés para realizar la conversión de monedas o divisas de diferentes países.
+Este es un desafío de la Especialización __Back-End G6 Alura - Oracle Next Education.__ El proyecto se llama "Alura Literatura" y parece ser una aplicación que permite a los usuarios consultar información sobre libros y autores. Está diseñado para interactuar con una base de datos PostgreSQL para almacenar información sobre libros y autores, y proporciona funcionalidades como búsqueda, listado y consulta de datos relacionados con libros y autores. A continuación, se detallan las clases principales y su funcionalidad:
 
 Los pasos solicitados para completar este desafío:
 
@@ -49,13 +49,21 @@ Los pasos solicitados para completar este desafío:
 [![Static Badge](https://img.shields.io/badge/Postman-gray?style=flat&logo=Postman&logoColor=orange)](https://www.postman.com/)
 [![Static Badge](https://img.shields.io/badge/app-Trello-%231466c3?style=flat&logo=trello)](https://trello.com/)
 
-En esta primera fase, nos piden que se lleve a cabo la instalación y configuración del entorno de desarrollo Java para nuestro desafío de construcción del Conversor de Monedas. Asegúrate de contar con los siguientes programas, archivos, versiones y app necesarias:
+En esta primera fase, nos piden que se lleve a cabo la instalación y cla configuración del entorno de desarrollo Java para nuestro desafío de construcción del LiterAlura en um proyecto Spring. Asegúrate de contar con los siguientes programas, archivos y versiones:
 - IntelliJ IDEA Community Edition
-- JDK 
+- Java JDK: versión: 17 en adelante
+- Maven: versión 4 en adelante
+- Spring: versión 3.2.3 - https://start.spring.io/
+- Postgres: versión 16 en adelante
 - JSON en Java y la librería Gson
 - Git y GitHub 
 - Postman
 - Trello
+
+- Dependencias para agregar al crear el proyecto en Spring Initializr:
+
+- Spring Data JPA
+- Postgres Driver
 
 &nbsp;
 
@@ -63,128 +71,115 @@ En esta primera fase, nos piden que se lleve a cabo la instalación y configurac
 [![Static Badge](https://img.shields.io/badge/Configuracion_del_entorno-%230067ff?style=flat)](#)
 [![Static Badge](https://img.shields.io/badge/API-Exchange_Rate_API-%23e90000?style=flat)](https://www.exchangerate-api.com/docs/java-currency-api) 
 
-En este paso crucial, es fundamental comprender mejor la API de tasas de cambio a utilizar, revisar su documentación y aprender cómo obtener la clave de API. Esta clave es esencial para realizar solicitudes y obtener datos actualizados. Asegúrate de seguir cuidadosamente las instrucciones proporcionadas por la API Exchange Rate-API.
+La API Gutendex es un catálogo de información de más de 70.000 libros presentes en Project Gutenberg (biblioteca en línea y gratuita).
+
+En este paso crucial, es fundamental comprender mejor la API de los libros, revisar su documentación y aprender cómo realizar las consultas en la API. En este desafío no es necesario obtener una clave de acceso, solo realizar consultas como se describe en el sitio web oficial.
 
 > [!NOTE]
 > Para este challenge se utilizo la siguiente API: 
-> [Exchange Rate-API](https://www.exchangerate-api.com/), debe registrarse para obtener su clave API (YOUR-API-KEY).
+> [Gutendex-API](https://gutendex.com/), y su Repositorio de API*: GitHub - [garethbjohnson/gutendex](https://github.com/garethbjohnson/gutendex): Web API for Project Gutenberg ebook metadata .
 
 Interactuando con la API, encontramos como se realizan las consultas, 
-Ejemplo: USD a COP, Dólares EEUU a Pesos Colombianos y un monto a convertir de 1000USD
+
 
 ```java
 // Setting URL
-https://v6.exchangerate-api.com/v6/YOUR-API-KEY/pair//USD/COP/1000
+(https://gutendex.com/books/)
 ```
 al realizar la consulta  en la API nos arroja lo siguiente:
 ```java
-// 20240421181021
-// https://v6.exchangerate-api.com/v6/YOUR-API-KEY/pair//USD/COP/1000
 {
-  "result": "success",
-  "documentation": "https://www.exchangerate-api.com/docs",
-  "terms_of_use": "https://www.exchangerate-api.com/terms",
-  "time_last_update_unix": 1713657602,
-  "time_last_update_utc": "Sun, 21 Apr 2024 00:00:02 +0000",
-  "time_next_update_unix": 1713744002,
-  "time_next_update_utc": "Mon, 22 Apr 2024 00:00:02 +0000",
-  "base_code": "USD",
-  "target_code": "COP",
-  "conversion_rate": 3906.1426,
-  "conversion_result": 3906142.6
+"count": 73568,
+"next": "https://gutendex.com/books/?page=2",
+"previous": null,
+"results": [
+{
+"id": 84,
+"title": "Frankenstein; Or, The Modern Prometheus",
+"authors": [
+{
+"name": "Shelley, Mary Wollstonecraft",
+"birth_year": 1797,
+"death_year": 1851
 }
+],
+// Resto del código omitido...
+],
+"bookshelves": [
+"Gothic Fiction",
+"Movie Books",
+"Precursors of Science Fiction",
+"Science Fiction by Women"
+],
+"languages": [
+"en"
+],
+// Resto del código omitido...
 ```
 y observamos los key que nos sirven para nuestro proyecto: 
 ```java
-  "base_code": "USD" (MONEDA ORIGEN)
-  "target_code": "COP" (MONEDA DESTINO)
-  "conversion_rate": 3906.1426, (TASA DE CONVERSION) a esa fecha.
-  "conversion_result": 3906142.6 (RESULTADO DE LA CONVERSION)
+ "title": "Frankenstein; Or, The Modern Prometheus",
+ "name": "Shelley, Mary Wollstonecraft",
+ "birth_year": 1797,
+ "death_year": 1851
+ "languages": [ "en"
+// Resto del código omitido...
 ```
 
 &nbsp;
 
-### 3. Importando la biblioteca Gson en IntelliJ IDEA  
-[![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
-[![Static Badge](https://img.shields.io/badge/Java_Library-Gson_%2F_Json-blue?style=flat&logo=json)](https://mvnrepository.com/artifact/com.google.code.gson/gson)
-[![Static Badge](https://img.shields.io/badge/Configuracion_del_entorno-%230067ff?style=flat)](#) 
-[![Static Badge](https://img.shields.io/badge/JSON--In--Java--2.10.1-JAR-blue)](*) 
-
-Para importar la biblioteca Gson en IntelliJ, sigue estos pasos:
-1.	Abre tu proyecto en IntelliJ.
-2.	Haz clic derecho sobre la carpeta del proyecto en el panel izquierdo.
-3.	Selecciona "Open Module Settings" en el menú contextual.
-4.	En la ventana que se abre, ve a la pestaña "Dependencies".
-5.	Haz clic en el signo "+" en la esquina inferior izquierda y elige "Library".
-6.	Busca "gson" en el cuadro de búsqueda.
-7.	Selecciona la versión de Gson que desees utilizar, previamente descargada.
-8.	Haz clic en "OK" para cerrar la ventana.
-&nbsp;
-> [!IMPORTANT]
-> Para descargar la biblioteca Gson, debemos ir a Maven Repository en Google. Buscamos Gson y seleccionamos la primera opción. La version descargada para este challenge es la 2.10.1.  [MVN Repository Gson](https://mvnrepository.com/artifact/com.google.code.gson/gson)
-
-&nbsp;
-*En esta captura de pantalla se muestra la importacion de la biblioteca Gson.*
-[![Screenshot interactuando y probando los key con la aplicacion Postman](https://github.com/nandojmj/conversor_prueba/blob/main/recursos/images/json.png)](#)
-
-&nbsp;
-
-### 4. Construyendo el Cliente para Solicitudes (HttpClient)  
+### 3. Construyendo una solicitud de API
+#### 3.1 Construyendo el Cliente para Solicitudes (HttpClient)  
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
 [![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
 [![Static Badge](https://img.shields.io/badge/Consumo_de_la_API-%23009929?style=flat)](#)
 [![Static Badge](https://img.shields.io/badge/Http-Client-%23ff1a00?style=flat)](#)
 
-Se utilizo la instancia HttpClient para realizar solicitudes a la API de tasas de cambio y obtener datos esenciales. El uso de`HttpClient` en Java facilita la conexión y la obtención de respuestas de manera eficiente. Se utiliza para enviar solicitudes HTTP y recibir respuestas HTTP sin la necesidad de bibliotecas externas.
-
-> [!NOTE]
->  Es necesario obtener su clave API para agregarla al codigo:  
-> [Exchange Rate API](https://www.exchangerate-api.com/)
-> [Documentacion Exchange Rate API Java ](https://www.exchangerate-api.com/docs/java-currency-api)
+Se utilizo la instancia HttpClient para realizar solicitudes a la API y obtener datos esenciales. El uso de`HttpClient` en Java facilita la conexión y la obtención de respuestas de manera eficiente. Se utiliza para enviar solicitudes HTTP y recibir respuestas HTTP sin la necesidad de bibliotecas externas.
 
 
 &nbsp;
 
 *En este fragmento de código, de la Class ""Conversion", se crea una instancia de `HttpClient` utilizando el método estático `newHttpClient()`. en YOUR-API-KEY se utiliza la llave solicitada:*
 ```java
-// Método para realizar la conversión
-     public RegistroConversion convertir(String codMonOrigen, String codMonDestino, int monto) {
-        // Construir la URI para la solicitud a la API
-        URI direccion_API = URI.create("https://v6.exchangerate-api.com/v6/YOUR-API-KEY/pair/"
-                + codMonOrigen + "/" + codMonDestino + "/" + monto);
-        // Crear cliente y solicitud HTTP
+public class ConsumoAPI {
+    // Método para obtener datos desde una URL
+    public String obtenerDatos(String url){
+        // Crear un cliente HTTP
         HttpClient client = HttpClient.newHttpClient();
+        
          // Resto del código omitido...
 ```
 &nbsp;
 
-### 5. Construyendo la Solicitud (HttpRequest)
+#### 3.2 Construyendo la Solicitud (HttpRequest)
 
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
 [![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
 [![Static Badge](https://img.shields.io/badge/Consumo_de_la_API-%23009929?style=flat)](#)
 [![Static Badge](https://img.shields.io/badge/Http-Request-%23f7a40c?style=flat)](#)
 
-El uso de la instancia HttpRequest para configurar y personalizar nuestras solicitudes a la API de tasas de cambio. La instancia HttpRequest en Java nos brinda un control detallado sobre los parámetros de nuestras solicitudes.
+El uso de la instancia HttpRequest para configurar y personalizar nuestras solicitudes a la API Literatura. La instancia HttpRequest en Java nos brinda un control detallado sobre los parámetros de nuestras solicitudes.
 
 `HttpRequest` representa una solicitud HTTP y se utiliza para construir la solicitud HTTP que se enviará al servidor.
 
 *En este fragmento de código, de la Class ""Conversion", se crea una instancia de `HttpRequest` utilizando el método `newBuilder()` de la clase `HttpRequest`, al cual se le pasa la URI del recurso solicitado.*
 ```java
- public RegistroConversion convertir(String codMonOrigen, String codMonDestino, int monto) {
+ public String obtenerDatos(String url){
        // Resto del código omitido...
 
-           // Crear cliente y solicitud HTTP
-        HttpClient client = HttpClient.newHttpClient();
+            // Construir la solicitud HTTP con la URL proporcionada
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(direccion_API)
+                .uri(URI.create(url))
                 .build();
+        HttpResponse<String> response = null;
+        try {
        // Resto del código omitido...
 ```
 
 &nbsp;
 
-### 6. Construyendo la la Respuesta (HttpResponse)
+#### 3.3 Construyendo la la Respuesta (HttpResponse)
 
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
 [![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
@@ -201,23 +196,29 @@ En esta parte se solicito el uso de la interfaz HttpResponse para gestionar las 
 
 *En este código, se declara una instancia de `HttpResponse<String>`, donde `<String>` especifica el tipo de cuerpo esperado en la respuesta, en este caso, una cadena de texto.*
 ```java
- public RegistroConversion convertir(String codMonOrigen, String codMonDestino, int monto) {
+ public String obtenerDatos(String url){
        // Resto del código omitido...
 
          // Variable para almacenar la respuesta de la solicitud
-           HttpResponse<String> response;
-        try {
-            // Realizar la solicitud HTTP
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
+           try {
+            // Enviar la solicitud HTTP y obtener la respuesta
+            response = client
+                    .send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            // Manejar excepción de E/S
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            // Manejar excepción de interrupción
             throw new RuntimeException(e);
         }
+        String json = response.body();
+        return json;
         // Resto del código omitido...
 ```
 
 &nbsp;
 
-### 7.	Analizando la respuesta en formato JSON
+### 4.	Analizando la respuesta en formato JSON
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
 [![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
 [![Static Badge](https://img.shields.io/badge/Consumo_de_la_API-%23009929?style=flat)](#)
@@ -226,199 +227,173 @@ En esta parte se solicito el uso de la interfaz HttpResponse para gestionar las 
 [![Static Badge](https://img.shields.io/badge/Postman-gray?style=flat&logo=Postman&logoColor=orange)](https://www.postman.com/)
 
 
-En esta parte de  nuestro Challenge se nos solicito el análisis de la respuesta JSON utilizando la biblioteca Gson en Java. La manipulación de datos JSON es esencial, ya que la mayoría de las respuestas de las API se presentan en este formato.  Se nos recomendó el uso de herramientas como Postman, para facilitar el análisis de los datos que se obtendrán de la API. Con la biblioteca Gson, puedes realizar el mapeo eficiente de los datos JSON a objetos Java, facilitando así la extracción y manipulación de la información necesaria.
+En esta parte de  nuestro Challenge se nos solicito el análisis de la respuesta JSON en Java. La manipulación de datos JSON es esencial, ya que la mayoría de las respuestas de las API se presentan en este formato.
+
+→ Para facilitar el análisis de los datos que se obtendrán de la API, recomendamos el uso del sitio de API para realizar consulta de libros o autores.
+
+Con la biblioteca Jackson, puedes realizar el mapeo eficiente de los datos JSON a objetos Java, facilitando así la extracción y manipulación de la información necesaria.
 
 > [!IMPORTANT]
-> Recordar utilizar la biblioteca Gson. Para descargar la biblioteca Gson, debemos ir a Maven Repository en Google. Buscamos Gson y seleccionamos la primera opción. La versión descargada para este challenge es la 2.10.1.  [MVN Repository Gson](https://mvnrepository.com/artifact/com.google.code.gson/gson)
+> → No olvides agregar la biblioteca Jackson al proyecto como dependencia del archivo POM.xml - sugerimos usar la versión 2.16.  
 
-*Fragmento de codigo utilizado en la Class Conversion.java, se  crea un JsonReader y se configura para aceptar JSON no valido:*
+*Fragmento de codigo utilizado en la ConvierteDatos.java*
 ```java
- public RegistroConversion convertir(String codMonOrigen, String codMonDestino, int monto) {
-       // Resto del código omitido...
-// Leer el JSON de la respuesta
-        try (JsonReader reader = new JsonReader(new StringReader(response.body()))) {
-            reader.setLenient(true);
+ public class ConvierteDatos implements IConvierteDatos {
+    private ObjectMapper objectMapper = new ObjectMapper();
+    // Método para obtener un objeto de tipo T a partir de un JSON
+    @Override
+    public <T> T obtenerDatos(String json, Class<T> clase) {
+        try {
+            // Parsea el JSON a un JsonNode
+            JsonNode rootNode = objectMapper.readTree(json);
 
-            // Configurar Gson para deserializar la respuesta
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                    .create();
+            // Obtiene el array de resultados
+            JsonNode resultsArray = rootNode.get("results");
+
+            // Si el array de resultados no es nulo y tiene al menos un elemento
+            if (resultsArray != null && resultsArray.size() > 0) {
+                // Obtiene el primer objeto en el array de resultados
+                JsonNode firstResult = resultsArray.get(0);
+                // Convierte el primer resultado a la clase especificada
+                return objectMapper.treeToValue(firstResult, clase);
+            } else {
+                // Maneja el caso donde no se encontraron resultados
+                throw new RuntimeException("No se encontraron resultados en el JSON.");
+            }
         // Resto del código omitido...
 ```
 
 &nbsp;
 
-Como ya habiamos identificado los campos de la API,  __`base_code`, `target_code`, `conversion_rate`__, y __`conversion_result`__ podemos interactuar con la API Exchange Rate y obtener esos datos para nuestro conversor.
+Utilizar ObjectMapper, para acceder a las distintas propiedades de la respuesta JSON.
 
-&nbsp;
-*En esta captura de pantalla se muestra la interacción con el software Postman.*
-[![Screenshot interactuando y probando los key con la aplicacion Postman](https://github.com/nandojmj/conversor_prueba/blob/main/recursos/images/ExchangePostman.png)](#)
-
-&nbsp;
-
-y observamos los key que nos sirven para nuestro proyecto: 
+*Fragmento de codigo utilizado en la ConvierteDatosAutor.java*
 ```java
-  "base_code": "USD" (MONEDA ORIGEN)
-  "target_code": "COP" (MONEDA DESTINO)
-  "conversion_rate": 3906.1426, (TASA DE CONVERSION) a esa fecha.
-  "conversion_result": 3906142.6 (RESULTADO DE LA CONVERSION)
-```
+public class ConvierteDatosAutor implements IConvierteDatos {
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-### 8. Filtrando las monedas
-[![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
-[![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
-[![Static Badge](https://img.shields.io/badge/Consumo_de_la_API-%23009929?style=flat)](#)
-[![Static Badge](https://img.shields.io/badge/Java_Library-Gson_%2F_Json-blue?style=flat&logo=json)](https://mvnrepository.com/artifact/com.google.code.gson/gson)
-[![Static Badge](https://img.shields.io/badge/API-Exchange_Rate_API-%23e90000?style=flat)](https://www.exchangerate-api.com/docs/java-currency-api)
-[![Static Badge](https://img.shields.io/badge/Postman-gray?style=flat&logo=Postman&logoColor=orange)](https://www.postman.com/)
+    // Método para obtener un objeto de tipo T a partir de un JSON
+    @Override
+    public <T> T obtenerDatos(String json, Class<T> clase) {
+        try {
+            JsonNode rootNode = objectMapper.readTree(json);
 
-En la octava fase de nuestro Challenge, nos pidieron el proceso de filtrar las monedas utilizando la biblioteca Gson en Java.
-Para acceder a datos específicos, como los valores de las diferentes monedas, es esencial comprender cómo navegar por la estructura JSON de la respuesta de la API. 
+            JsonNode resultsArray = rootNode.get("results");
 
-Para el filtrado de monedas, será necesario utilizar el atributo "Currency Code" del JSON. Para el desafío, nos dieron a elegir al menos tres "Currency Code" para incluir en la aplicación. Estos códigos son:
+            // Verifica si el array de resultados no es nulo y tiene al menos un elemento
+            if (resultsArray != null && resultsArray.size() > 0) {
+                // Obtiene el primer autor del primer resultado
+                JsonNode firstResult = resultsArray.get(0).get("authors").get(0);
+                // Convierte el primer autor a la clase especificada
+                return objectMapper.treeToValue(firstResult, clase);
 
-1.	ARS - Peso argentino
-2.	BOB - Boliviano boliviano
-3.	BRL - Real brasileño
-4.	CLP - Peso chileno
-5.	COP - Peso colombiano
-6.	USD - Dólar estadounidense
-
-  Como ya tenemos los campos identificados __`base_code`, `target_code`, `conversion_rate`__, y __`conversion_result`__  ahora podemos interactuar con la API Exchange Rate y obtener esos datos para nuestro conversor.
-En este proyecto se utilizaron 4 codigos iniciales:
-
-1.	COP - Peso colombiano
-2.	USD - Dólar estadounidense
-3.	BRL - Real brasileño
-4.	ARS - Peso argentino
-
-*Ej: USD -> COP*
-```
-{
-(https://v6.exchangerate-api.com/v6/YOUR-API-KEY/pair//USD/COP/100000)
-    "result": "success",
-    "documentation": "https://www.exchangerate-api.com/docs",
-    "terms_of_use": "https://www.exchangerate-api.com/terms",
-    "time_last_update_unix": 1713744001,
-    "time_last_update_utc": "Mon, 22 Apr 2024 00:00:01 +0000",
-    "time_next_update_unix": 1713830401,
-    "time_next_update_utc": "Tue, 23 Apr 2024 00:00:01 +0000",
-    "base_code": "USD",
-    "target_code": "COP",
-    "conversion_rate": 3913.8964,
-    "conversion_result": 391389640
-}
-```
-
-*Ej: BRL -> COP*
-```
-(https://v6.exchangerate-api.com/v6/YOUR-API-KEY/pair//BRL/COP/100000):
-{
-    "result": "success",
-    "documentation": "https://www.exchangerate-api.com/docs",
-    "terms_of_use": "https://www.exchangerate-api.com/terms",
-    "time_last_update_unix": 1713744001,
-    "time_last_update_utc": "Mon, 22 Apr 2024 00:00:01 +0000",
-    "time_next_update_unix": 1713830401,
-    "time_next_update_utc": "Tue, 23 Apr 2024 00:00:01 +0000",
-    "base_code": "BRL",
-    "target_code": "COP",
-    "conversion_rate": 747.1028,
-    "conversion_result": 74710280
-}
-```
-
-*Ej: ARS -> COP*
-```
-{
-(https://v6.exchangerate-api.com/v6/YOUR-API-KEY/pair//ARS/COP/100000)
-    "result": "success",
-    "documentation": "https://www.exchangerate-api.com/docs",
-    "terms_of_use": "https://www.exchangerate-api.com/terms",
-    "time_last_update_unix": 1713744001,
-    "time_last_update_utc": "Mon, 22 Apr 2024 00:00:01 +0000",
-    "time_next_update_unix": 1713830401,
-    "time_next_update_utc": "Tue, 23 Apr 2024 00:00:01 +0000",
-    "base_code": "ARS",
-    "target_code": "COP",
-    "conversion_rate": 4.5260,
-    "conversion_result": 452600
-}
- 
 ```
 
 &nbsp;
 
-### 9. Convirtiendo Valores
+### 5. Convertiendo los datos
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
 [![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
 [![Static Badge](https://img.shields.io/badge/Consumo_de_la_API-%23009929?style=flat)](#)
 [![Static Badge](https://img.shields.io/badge/Java_Library-Gson_%2F_Json-blue?style=flat&logo=json)](https://mvnrepository.com/artifact/com.google.code.gson/gson)
 [![Static Badge](https://img.shields.io/badge/API-Exchange_Rate_API-%23e90000?style=flat)](https://www.exchangerate-api.com/docs/java-currency-api)
 
-En esta novena fase, se nos pidio  las conversiones entre las monedas. Se crearon tres clases en el package Conversion:
+En esta etapa, llevaremos a cabo las conversiones con los datos de libros y autores, ahora que contamos con la información en nuestro poder. Se crearon varias clases y paquetes:
 
 ![ ](https://github.com/nandojmj/conversor_prueba/blob/main/recursos/images/packageconversion.JPG)(#)
 
-### Clase Conversion
 
-La clase `Conversion` se utiliza para realizar conversiones de moneda utilizando una API externa y gestionar el historial de conversiones.
-Realiza solicitudes HTTP a la API de ExchangeRate-API para obtener las tasas de conversión, alcula el resultado de la conversión y la tasa de conversión y guarda un registro de cada conversión realizada junto con la marca de tiempo en un archivo JSON.
+### Clases Principales:
+#### Principal (com.alura.literatura.principal.Principal):
 
-__a. Atributos:__ La clase tiene atributos que representan los datos necesarios para realizar una conversión de moneda:
-- `monedaOrigen`: Representa la moneda de origen de la conversión.
-- `monedaDestino`: Representa la moneda de destino de la conversión.
-- `monto`: Representa el monto a convertir.
-- `resultado`: Representa el resultado de la conversión.
-- `conversionRate`: La tasa de conversión.
+- Esta clase parece ser la clase principal de la aplicación. Contiene el método muestraElMenu() que muestra un menú de opciones al usuario y maneja la interacción con el usuario.
+- Utiliza instancias de LibroRepository y AutorRepository para acceder a la base de datos y realizar operaciones CRUD en las entidades Libro y Autor.
 
-__b. Método `convertir`:__ Este método realiza la conversión de moneda utilizando una API externa. Utiliza un cliente
-HTTP para enviar una solicitud a la API, recibe la respuesta en formato JSON, la parsea y extrae los datos necesarios
-utilizando la biblioteca Gson. Luego, crea un objeto `Conversion` con los datos obtenidos y lo guarda en el historial de
-conversiones.
+#### Libro (com.alura.literatura.model.Libro):
 
-__c. Adaptador personalizado para `LocalDateTime`:__ La clase incluye un adaptador personalizado para serializar y deserializar
-objetos `LocalDateTime`. Esto se utiliza para formatear adecuadamente las fechas y horas al guardar y recuperar el historial
-de conversiones (`class LocalDateTimeAdapter`).
+- Esta clase representa la entidad "Libro" en el modelo de datos de la aplicación.
+- Tiene atributos como id, titulo, autor, idioma y descargas.
+- Está mapeada a una tabla llamada "libros" en la base de datos.
+- La clase proporciona métodos para acceder y modificar sus atributos, así como un método toString() para imprimir información sobre el libro.
 
-En resumen, la clase `Conversion` se utiliza como una interfaz para realizar conversiones de moneda utilizando una API externa, gestionando el historial de conversiones y proporcionando métodos para acceder y modificar los datos relacionados con la conversión.
+#### Autor (com.alura.literatura.model.Autor):
+
+- Esta clase representa la entidad "Autor" en el modelo de datos de la aplicación.
+- Tiene atributos como id, nombre, fechaNacimiento y fechaFallecimiento.
+- Está mapeada a una tabla llamada "autores" en la base de datos.
+- La clase proporciona métodos para acceder y modificar sus atributos, así como un método toString() para imprimir información sobre el autor.
+
+#### LibroRepository (com.alura.literatura.repository.LibroRepository):
+
+- Esta interfaz proporciona métodos para realizar operaciones CRUD en la entidad Libro.
+- Extiende JpaRepository de Spring Data JPA.
+
+#### AutorRepository (com.alura.literatura.repository.AutorRepository):
+
+- Esta interfaz proporciona métodos para realizar operaciones CRUD en la entidad Autor.
+- Extiende JpaRepository de Spring Data JPA.
+
+#### LiteraturaApplication (com.alura.literatura.LiteraturaApplication):
+
+- Esta clase es la clase principal de Spring Boot que inicia la aplicación.
+- Implementa CommandLineRunner y utiliza instancias de LibroRepository y AutorRepository para iniciar la aplicación y mostrar el menú principal.
+  
+### Servicios y Utilidades:
+#### AutorServicio (com.alura.literatura.service.AutorServicio):
+
+- Este servicio proporciona métodos para obtener información sobre autores.
+- Utiliza AutorRepository para acceder a la base de datos y obtener datos sobre autores.
+
+#### LibroServicio (com.alura.literatura.service.LibroServicio):
+
+- Este servicio proporciona métodos para obtener información sobre libros.
+- Utiliza LibroRepository para acceder a la base de datos y obtener datos sobre libros.
+
+#### ConvierteDatos (com.alura.literatura.service.ConvierteDatos) y ConvierteDatosAutor (com.alura.literatura.service.ConvierteDatosAutor):
+
+- Estas clases proporcionan métodos para convertir datos de JSON a objetos Java utilizando la biblioteca Jackson ObjectMapper.
+- Implementan la interfaz IConvierteDatos.
+
+#### IConvierteDatos (com.alura.literatura.service.IConvierteDatos):
+
+Esta interfaz define métodos para convertir datos de JSON a objetos Java.
+
+
 
 &nbsp;
 
 ```
-            +-------------------+        +---------------------+
-            |    Principal      | ---->  |     MenuHandler     |
-            +-------------------+        +---------------------+
-            |                   |utiliza | mostrarMenu()       |
-            |                   |----- ->| ejecutarOpcion()    |
-            |                   |        | convertirMoneda()   |
-            |                   |        | elegirOtrasMonedas()|
-            |                   |        | mostrarResultado()  |
-            |                   |        +---------------------+
-            +-------------------+ 
-                      | utiliza
-                      |
-                      V
-            +-------------------+       +---------------------+      +---------------------+
-            |    Conversion     | <---> |  ConversionResponse | <--> |  RegistroConversion |
-            +-------------------+       +---------------------+      +---------------------+
-            | - monedaOrigen    |       | - monedaOrigen      |      | - conversion        |
-            | - monedaDestino   |       | - monedaDestino     |      | - timestamp         |
-            | - monto           |       | - conversionRate    |      +---------------------+
-            | - resultado       |       | - resultado         |
-            | - conversionRate  |       +---------------------+
-            |                   |       |Índices API Exchange |
-            |                   |       | - base_code         |
-            |                   |       | - target_code       |
-            |                   |       | - conversion_rate   |
-            +-------------------+       | - conversion_result |
-                       |                +---------------------+
-                       | utiliza
-                       | 
-                       V
-            +---------------------+
-            | LocalDateTimeAdapter|
-            +---------------------+
+            +--------------------------------------------+
+            |              LiteraturaApplication         |
+            |                    |                       |
+            |      +-------------+-------------+         |
+            |      |             |             |         |
+            | LibroRepository AutorRepository  Principal |
+            |      |             |             |         |
+            +--------------------------------------------+
+                   |
+                   |
+            +------v------+    +--------------------+
+            | LibroServicio|    |  AutorServicio    |
+            +------+-------+    +--------+----------+
+                   |                     |
+                   v                     v
+            +------+-------+    +--------+----------+
+            |  LibroDTO   |    |     AutorDTO       |
+            +------+-------+    +--------+----------+
+                   |                     |
+                   +-----------+---------+
+                               |
+                               v
+                       +-------+---------+
+                       | IConvierteDatos |
+                       +-------+---------+
+                               |
+                     +---------+-----------+
+                     | ConvierteDatos      |
+                     | ConvierteDatosAutor |
+                     +---------------------+
+
 
 ```
 *En este diagrama:*
