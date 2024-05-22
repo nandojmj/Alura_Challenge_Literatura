@@ -9,25 +9,30 @@
 ![Endpoint Badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fhits.dwyl.com%2Fnandojmj%2FAlura_Challenge_Literatura.json&style=flat&logo=github&color=brightgreen)
 
 
-Este es un desafío de la Especialización __Back-End G6 Alura - Oracle Next Education.__ El proyecto se llama "Alura Literatura" y parece ser una aplicación que permite a los usuarios consultar información sobre libros y autores. Está diseñado para interactuar con una base de datos PostgreSQL para almacenar información sobre libros y autores, y proporciona funcionalidades como búsqueda, listado y consulta de datos relacionados con libros y autores. A continuación, se detallan las clases principales y su funcionalidad:
+Este es un desafío de la Especialización __Back-End G6 Alura - Oracle Next Education.__ El proyecto se llama "Alura Literatura" y es una aplicación que permite a los usuarios consultar información sobre libros y autores, un catálogo de libros. Está diseñado para interactuar con una base de datos PostgreSQL para almacenar información sobre libros y autores, y proporciona funcionalidades como búsqueda, listado y consulta de datos relacionados con libros y autores. A continuación, se detallan las clases principales y su funcionalidad:
 
 Los pasos solicitados para completar este desafío:
 
-1.  Configurando el entorno Java
+1.  Configurando el entorno Java y Spring
 2.	Conociendo la API para traer datos
-3.	Importando la biblioteca Gson en IntelliJ IDEA 
-4.	Construyendo el Cliente para Solicitudes (HttpClient)
-5.	Construyendo la Solicitud (HttpRequest)
-6.	Construyendo la la Respuesta (HttpResponse)
-7.	Analizando la respuesta en formato JSON
-8.	Filtrando las monedas
-9.	Convirtiendo Valores
-10. Interactuando con el usuario
-11. Hacer un Readme.md
-12. Extra (Opcional)
-    12.1 Historial de Conversiones
-    12.2 Soporte para Más Monedas
-    12.3 Registros con Marca de Tiempo
+3.	Construyendo una solicitud de API
+3.1	Construyendo el Cliente para Solicitudes (HttpClient)
+3.2	Construyendo la Solicitud (HttpRequest)
+3.3	Construyendo la la Respuesta (HttpResponse)
+4.	Analizando la respuesta en formato JSON
+5.	Convertiendo los datos
+6.	Interactuando con el usuario
+7.	Consultando Libros
+8.	Consultando Autores
+9.	Persistencia de datos
+10. Listando libros por idiomas
+11.  Listando autores vivos en determinado año
+12. Hacer un Readme.md
+13. Extra (Opcional)
+    12.1 Generando estadísticas
+    12.2 Top 10 libros más descargados
+    12.3 Buscar autor por nombre
+    12.3 Listar autores con otras consultas
     
    
 &nbsp;
@@ -49,7 +54,7 @@ Los pasos solicitados para completar este desafío:
 [![Static Badge](https://img.shields.io/badge/Postman-gray?style=flat&logo=Postman&logoColor=orange)](https://www.postman.com/)
 [![Static Badge](https://img.shields.io/badge/app-Trello-%231466c3?style=flat&logo=trello)](https://trello.com/)
 
-En esta primera fase, nos piden que se lleve a cabo la instalación y cla configuración del entorno de desarrollo Java para nuestro desafío de construcción del LiterAlura en um proyecto Spring. Asegúrate de contar con los siguientes programas, archivos y versiones:
+En esta primera fase, nos piden que se lleve a cabo la instalación y la configuración del entorno de desarrollo Java para nuestro desafío de construcción del desafio Literatura en un proyecto Spring. Asegúrate de contar con los siguientes programas, archivos y versiones:
 - IntelliJ IDEA Community Edition
 - Java JDK: versión: 17 en adelante
 - Maven: versión 4 en adelante
@@ -70,8 +75,6 @@ En esta primera fase, nos piden que se lleve a cabo la instalación y cla config
 ### 2. Conociendo la API para traer datos
 [![Static Badge](https://img.shields.io/badge/Configuracion_del_entorno-%230067ff?style=flat)](#)
 ![Static Badge](https://img.shields.io/badge/API-Gutendex-%23e90000)
-
-
 
 La API Gutendex es un catálogo de información de más de 70.000 libros presentes en Project Gutenberg (biblioteca en línea y gratuita).
 
@@ -140,10 +143,9 @@ y observamos los key que nos sirven para nuestro proyecto:
 
 Se utilizo la instancia HttpClient para realizar solicitudes a la API y obtener datos esenciales. El uso de`HttpClient` en Java facilita la conexión y la obtención de respuestas de manera eficiente. Se utiliza para enviar solicitudes HTTP y recibir respuestas HTTP sin la necesidad de bibliotecas externas.
 
-
 &nbsp;
 
-*En este fragmento de código, de la Class ""Conversion", se crea una instancia de `HttpClient` utilizando el método estático `newHttpClient()`. en YOUR-API-KEY se utiliza la llave solicitada:*
+*En este fragmento de código, de la Class "ConsumoAPI", se crea una instancia de `HttpClient` utilizando el método estático `newHttpClient()`:*
 ```java
 public class ConsumoAPI {
     // Método para obtener datos desde una URL
@@ -166,7 +168,7 @@ El uso de la instancia HttpRequest para configurar y personalizar nuestras solic
 
 `HttpRequest` representa una solicitud HTTP y se utiliza para construir la solicitud HTTP que se enviará al servidor.
 
-*En este fragmento de código, de la Class ""Conversion", se crea una instancia de `HttpRequest` utilizando el método `newBuilder()` de la clase `HttpRequest`, al cual se le pasa la URI del recurso solicitado.*
+*En este fragmento de código, de la Class"ConsumoAPI", se crea una instancia de `HttpRequest` utilizando el método `newBuilder()` de la clase `HttpRequest`, al cual se le pasa la URI del recurso solicitado.*
 ```java
  public String obtenerDatos(String url){
        // Resto del código omitido...
@@ -198,7 +200,7 @@ En esta parte se solicito el uso de la interfaz HttpResponse para gestionar las 
 
 &nbsp;
 
-*En este código, se declara una instancia de `HttpResponse<String>`, donde `<String>` especifica el tipo de cuerpo esperado en la respuesta, en este caso, una cadena de texto.*
+*En este código, se declara una instancia de `HttpResponse.BodyHandlers.ofString())`, donde `<String>` especifica el tipo de cuerpo esperado en la respuesta, en este caso, una cadena de texto.*
 ```java
  public String obtenerDatos(String url){
        // Resto del código omitido...
@@ -305,8 +307,8 @@ public class ConvierteDatosAutor implements IConvierteDatos {
 
 En esta etapa, llevaremos a cabo las conversiones con los datos de libros y autores, ahora que contamos con la información en nuestro poder. Se crearon varias clases y paquetes:
 
-![ ](https://github.com/nandojmj/conversor_prueba/blob/main/recursos/images/packageconversion.JPG)(#)
 
+![estructura](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/209bfe4a-e020-4468-b105-17a75de28d44)
 
 ### Clases Principales:
 #### Principal (com.alura.literatura.principal.Principal):
@@ -445,7 +447,6 @@ public class Libro {
 ```
 &nbsp;
 
-&nbsp;
 
 *Fragmento de codigo utilizado en la clase `autor.java`:*
 ```java
@@ -487,7 +488,45 @@ public class Autor {
 
 En esta etapa del desafío, se solicito  la interacción con el usuario, El método Main debe implementar la interfaz CommandLineRunner y su método run() donde deberás llamar un método para exhibir el menu. En este método, debes crear un bucle para presentar a tu usuario las opciones de insercion y consulta. El usuario deberá seleccionar un número que corresponderá a la opcion numérica y proporcionar los datos que la aplicación recibirá, utilizando la clase Scanner para capturar la entrada do usuário.
 
-  &nbsp;
+  &nbsp
+
+```java
+ // Resto del código omitido...
+   **
+ * Clase principal de la aplicación Spring Boot.
+ */
+
+@SpringBootApplication
+public class LiteraturaApplication implements CommandLineRunner {
+	@Autowired
+	private LibroRepository libRepository;
+
+	@Autowired
+	private AutorRepository autRepository;
+
+	/**
+	 * Método principal para iniciar la aplicación Spring Boot.
+	 * @param args Argumentos de la línea de comandos.
+	 */
+
+	public static void main(String[] args) {
+		SpringApplication.run(LiteraturaApplication.class, args);
+	}
+
+	/**
+	 * Método para ejecutar la aplicación una vez iniciada.
+	 * @param args Argumentos de la línea de comandos.
+	 * @throws Exception Excepción que puede ocurrir durante la ejecución.
+	 */
+	@Override
+	public void run(String... args) throws Exception {
+		Principal principal = new Principal(libRepository, autRepository);
+		principal.muestraElMenu();
+
+	}
+ // Resto del código omitido...
+```
+&nbsp;
 
 
 ```java
@@ -548,6 +587,7 @@ En resumen tenemos estas dos funcionalidades obligatorias en el proyecto:
 
 *Fragmento de codigo utilizado en la clase `DatosLibro.java`:*
 ```java
+ // Resto del código omitido...
 **
  * Clase que representa los datos de un libro obtenidos de una fuente externa.
  */
@@ -560,7 +600,6 @@ public record DatosLibro(
     @JsonAlias("download_count") Double descargas){
 }
 
- 
  // Resto del código omitido...
 
 ```
@@ -591,6 +630,8 @@ Listar autores vivos en determinado año
 
 *Fragmento de codigo utilizado en la clase `DatosLibro.java`:*
 ```java
+ // Resto del código omitido...
+
 /**
  * Clase que representa los datos de un autor obtenidos de una fuente externa.
  */
@@ -608,8 +649,7 @@ public record DatosAutor(
 
 &nbsp;
 
-
-  
+ 
 
   ### 9. Persistencia de datos
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
@@ -618,9 +658,9 @@ public record DatosAutor(
 ![Static Badge](https://img.shields.io/badge/PostgresSQL-%234169E1?style=flat&logo=PostgreSQL&logoColor=white)
 [![Static Badge](https://img.shields.io/badge/Pruebas_finales-%2340a5ff?style=flat)](#)
 
-En esta parte se nos solicito enficarnos en construir una base de datos, con tablas y atributos relacionados a nuestros objetos de interés: Libro y Autor.
+En esta parte se nos solicito enfocarnos en construir una base de datos, con tablas y atributos relacionados a nuestros objetos de interés: Libro y Autor.
 
-En este desafío vamos a utilizar la base de datos llamada PostgreSQL, una de las bases de datos open source más utilizadas en el mercado.
+En este desafío vamos a utilizar una base de datos en PostgreSQL, llamada "alura_Literatura", un gestor de bases de datos open source más utilizadas en el mercado.
 
 Sugerimos la creación de clases de entidad/modelo para Libro y Autor, así como también sus respectivas interfaces de repositorio para manejar inserción y consultas en la base de datos.
 
@@ -651,7 +691,7 @@ public interface LibroRepository extends JpaRepository<Libro,Long> {
  // Resto del código omitido...
 
 ```
-&nbsp;
+
 
 *Fragmento de codigo utilizado en la clase `AutorRepository.java`:*
 ```java
@@ -679,14 +719,14 @@ public interface AutorRepository extends JpaRepository<Autor,Long> {
  // Resto del código omitido...
 
 ```
-&nbsp;
+
 
   ### 10. Listando libros por idiomas
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
 [![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
 [![Static Badge](https://img.shields.io/badge/Pruebas_finales-%2340a5ff?style=flat)](#)
 
-Se nos solicito que una vez que ya tienes libros y autores guardados en tu base de datos, ¿qué tal exhibir estadísticas sobre ellos a tu usuario? Aprovecha los recursos de Streams de Java y derived queries para brindar tu usuario con estadísticas sobre la cantidad de libros en un determinado idioma en la base de datos.
+Se nos solicito que una vez que ya tienes libros y autores guardados en tu base de datos, aprovechar los recursos de Streams de Java y derived queries para brindar tu usuario con estadísticas sobre la cantidad de libros en un determinado idioma en la base de datos.
 
 No es necesario crear opciones para todos los idiomas. Elija como mínimo dos idiomas.
 
@@ -694,6 +734,7 @@ En resumen tenemos esta funcionalidad obligatoria en el proyecto:
 
 Exhibir cantidad de libros en un determinado idioma
 
+&nbsp;
 
 *Fragmento de codigo utilizado en la clase `Principal.java`:*
 ```java
@@ -703,7 +744,7 @@ Exhibir cantidad de libros en un determinado idioma
         System.out.println("----------------------------------------------------------------------------------");
         System.out.println("-------------- Búsqueda de libros registrados en la BD por idioma ----------------");
         System.out.println("----------------------------------------------------------------------------------");
-                System.out.println("Ingrese el idioma del que desea buscar los libros: en (english) o es (español)");
+                System.out.println("Ingrese el idioma del que desea buscar los libros: en (english), es (español), fr (frances)");
         String idiomaBuscado = teclado.nextLine();
         List<Libro> librosBuscados = libros.stream()
                 .filter(l -> l.getIdioma().contains(idiomaBuscado))
@@ -714,6 +755,7 @@ Exhibir cantidad de libros en un determinado idioma
  // Resto del código omitido...
 
 ```
+&nbsp;
  ### 11. Listando autores vivos en determinado año
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
 [![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
@@ -722,7 +764,7 @@ Exhibir cantidad de libros en un determinado idioma
 
 Se nos solicito que una vez que ya tienes libros y autores guardados en tu base de datos, cambiar el método para listar los autores vivos en determinado año. Para eso, debes utilizar las derived queries para recuperar todos los autores que estaban vivos en el año que el usuario te informará.
 
-se realizaron varias consultas con las derived queries:
+Se realizaron varias consultas con las derived queries:
 
 *Fragmento de codigo utilizado en la clase `Principal.java`:*
 ```java
@@ -764,224 +806,128 @@ se realizaron varias consultas con las derived queries:
 // Resto del código omitido...
 
 ```
+&nbsp;
 
-
-### 11. **Hacer un README:** [![Static Badge](https://img.shields.io/badge/status-OK-gree)](#)
+### 12. **Hacer un README:** [![Static Badge](https://img.shields.io/badge/status-OK-gree)](#)
 Uno de los pasos más importantes al participar en una selección de trabajo es resolver un desafío propuesto por la empresa con la información de la resolución, y generalmente esto debe estar en el README. ¿Y qué es el README? Es un archivo con extensión .md y es un documento con la descripción del proyecto. 
 Este mismo archivo que se esta leyendo fue el resultado del README para el Challenge.
 
 
-### 12.	**Extra (Opcional)**
+### 13.	**Extra (Opcional)**
 
 Se nos propueso nn caso que quiecieramos desafiarnos aún más y proporcionar a los usuarios una experiencia más rica y personalizada, hay diversas funcionalidades interesantes que puedes explorar:
 
-#### 12.1  Historial de Conversiones: [![Static Badge](https://img.shields.io/badge/status-OK-gree)](#)
-Agregar la capacidad de rastrear y mostrar el historial de las últimas conversiones realizadas, brindando a los usuarios una visión completa de sus actividades.
+#### 13.1  Generando estadísticas: [![Static Badge](https://img.shields.io/badge/status-OK-gree)](#)
+Funcionalidades opcionales, obtener datos estadísticos de un objeto Java. Es posible obtener dichos datos ya sea de consultas de la API o base de datos.
 
-####  Registro de Historial en Archivo JSON 
-
-En la clase `Conversion`, se mantiene un registro de todas las conversiones realizadas en un archivo JSON llamado "registros_data_time.json". Aquí está cómo se realiza:
-
-1. **Lectura del Historial desde un Archivo JSON**:
-   Se lee el historial de conversiones desde el archivo JSON utilizando Gson. Si el archivo no existe, se crea un historial vacío.
-
-    ```java
-    RegistroConversion[] historial;
-    try (Reader fileReader = new FileReader("registros_data_time.json")) {
-        historial = gson.fromJson(fileReader, RegistroConversion[].class);
-    } catch (FileNotFoundException e) {
-        historial = new RegistroConversion[0];
-    }
-    ```
-
-2. **Actualización del Historial**: 
-
-   Se agrega el nuevo registro de conversión al final del historial existente.
-
-    ```java
-    RegistroConversion[] nuevoHistorial = new RegistroConversion[historial.length + 1];
-    System.arraycopy(historial, 0, nuevoHistorial, 0, historial.length);
-    nuevoHistorial[historial.length] = registroConversion;
-    ```
-
-3. **Escritura del Historial Actualizado en el Archivo JSON**:
-   Se escribe el historial actualizado en el archivo JSON para mantener un registro de todas las conversiones realizadas.
-
-    ```java
-    try (Writer fileWriter = new FileWriter("registros_data_time.json")) {
-        gson.toJson(nuevoHistorial, fileWriter);
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-    ```
-
-De esta manera, cada vez que se realiza una conversión de moneda, se agrega un nuevo registro al historial y se actualiza el archivo JSON con el nuevo historial. Así, se mantiene un registro completo y actualizado de todas las conversiones realizadas.
-
-*Captura de pantalla de la ejecucion del proyecto mostrando resultados de conversion y se observa el contenido en el archivo `registros_data_time.json` en formato json, donde se registran y actualizan las consultas realizadas, incluyendo información sobre qué monedas se convirtieron*
-
-![ ](https://github.com/nandojmj/conversor_prueba/blob/main/recursos/images/json2.png) 
-
-Registro en el archivo `registros_data_time.json`:
-```
- {
-    "conversion": {
-      "Moneda_Origen": "ARS",
-      "Moneda_Destino": "USD",
-      "Monto_a_Convertir": 100500.0,
-      "Resultado": 116.178,
-      "Tasa_Conversion": 0.001156
-    },
-    "timestamp": "2024-04-22 14:15:58"
-  },
-  {
-    "conversion": {
-      "Moneda_Origen": "USD",
-      "Moneda_Destino": "COP",
-      "Monto_a_Convertir": 500.0,
-      "Resultado": 1956948.2,
-      "Tasa_Conversion": 3913.8964
-    },
-    "timestamp": "2024-04-22 14:17:03"
-  }
-```
-
-
-#### 12.2  Soporte para Más Monedas: [![Static Badge](https://img.shields.io/badge/status-OK-gree)](#)
-Se amplía la lista de monedas disponibles para la elección, permitiendo a los usuarios convertir entre una variedad aún mayor de opciones monetarias.La API admite las 161 monedas mundiales que circulan habitualmente. Estos cubren el 99% de todos los estados y territorios reconocidos por la ONU.
-
-***Fragmento de codigo utilizado en la Class `MenuHandler.java` para seleccionar otras monedas que se desea convertir. En el menu principal la opcion 7 nos lleva a `7-Elegir otro tipo de monedas a convertir: donde nos mostra 100 codigos currency con sus respectivos paises` cumpliendo con la opcion adicional del challenge de Soporte para Más Monedas ***
+Presentar los datos de los 10 libros más descargados en la base de datos.
 
 ```java
-// Resto del código omitido...
-  public static void mostrarMenu() {
-        System.out.println("************************************************************");
-        System.out.println("""
-                1- Convertir de COP (peso colombiano) a USD (dólar).
-                2- Convertir de USD (dólar) a COP (peso colombiano).
-                3- Convertir de BRL (real brasileño) a USD (dólar).
-                4- Convertir de USD (dólar) a BRL (real brasileño).
-                5- Convertir de ARS (peso argentino) a USD (dólar).
-                6- Convertir de USD (dólar) a ARS (peso argentino).
-                7- Elegir otras monedas para convertir.
-                8- Salir
-
- // Resto del código omitido...
-
-            case 6:
-                convertirMoneda("USD", "ARS", conversion, lectura); // Convertir de USD a ARS
-                break;
-            case 7:
-                elegirOtrasMonedas(conversion, lectura); // Llama al método para elegir otras monedas a convertir
-                break;
-            case 8:
-                System.out.println("¡Gracias por usar el convertidor! ¡Hasta luego!"); // Mensaje de despedida
-                System.exit(0); // Finaliza el programa
-
-// Resto del código omitido...
-
-           private static void elegirOtrasMonedas(Conversion conversion, Scanner lectura) {
+    // Método para buscar los 10 libros más descargados registrados en la base de datos
+    public void buscarLibrosTop10EnLaDB() {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("----------- Top 10 de libros más descargados registrados en  la BD ---------------");
+        System.out.println("----------------------------------------------------------------------------------");
         try {
-            System.out.println("""
-            Esta lista contiene 100 códigos de moneda y sus respectivos países para facilitar la conversión de moneda:
-        
-            | 1.  **AED**: United Arab Emirates      | 2.  **AFN**: Afghanistan          | 3.  **ALL**: Albania
-            | 4.  **AMD**: Armenia                   | 5.  **ANG**: Netherlands Antilles | 6.  **AOA**: Angola
-            | 7.  **ARS**: Argentina                 | 8.  **AUD**: Australia            | 9.  **AWG**: Aruba
-            | 10. **AZN**: Azerbaijan                | 11. **BBD**: Barbados             | 12. **BGN**: Bulgaria
-            | 13. **BHD**: Bahrain                   | 14. **BRL**: Brazil               | 15. **BSD**: Bahamas
-            | 16. **BTN**: Bhutan                    | 17. **BWP**: Botswana             | 18. **BZD**: Belize
+            List<Libro> libros = libRepositorio.findAll();
+            List<Libro> librosOrdenados = libros.stream()
+                    .sorted(Comparator.comparingDouble(Libro::getDescargas).reversed())
+                    .collect(Collectors.toList());
+            List<Libro> topLibros = librosOrdenados.subList(0, Math.min(10, librosOrdenados.size()));
+            for (int i = 0; i < topLibros.size(); i++) {
+                System.out.println((i + 1) + ". " + topLibros.get(i));
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Error al buscar los libros en la base de datos: " + e.getMessage());
+            libros = new ArrayList<>();
+    // Resto del código omitido...
 
-// Resto del código omitido...
+```
 
-      | 100. **PLN**: Poland
-            Ingrese el código de moneda base:""");
+####  13.2  Top 10 de libros más descargados de la API: [![Static Badge](https://img.shields.io/badge/status-OK-gree)](#)
 
-            String monedaBase = lectura.next().toUpperCase(); // Lee el código de moneda base ingresado por el usuario
-            System.out.println("Ingrese el código de moneda destino:");
-            String monedaDestino = lectura.next().toUpperCase(); // Lee el código de moneda destino ingresado por el usuario
-            convertirMoneda(monedaBase, monedaDestino, conversion, lectura); // Realiza la conversión
-        } catch (Exception e) {
+Presentar los datos de los 10 libros más descargados, siendo una consulta directamente hecha en la API.
+
+```java
+    // Método para buscar los 10 libros más descargados de la API
+    public void buscarLibrosTop10EnAPI() {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("---------------- Top 10 de libros más descargados de la API ----------------------");
+        System.out.println("----------------------------------------------------------------------------------");
+        try {
+            String json = consumoAPI.obtenerDatos(URL_BASE + "?sort");
+
+            List<DatosLibro> datosLibros = conversor.obtenerDatosArray(json, DatosLibro.class);
+            List<DatosAutor> datosAutor = conversorAutor.obtenerDatosArray(json, DatosAutor.class);
+
+            List<Libro> libros = new ArrayList<>();
+            for (int i = 0; i < datosLibros.size(); i++) {
+                Autor autor = new Autor(
+                        datosAutor.get(i).nombre(),
+                        datosAutor.get(i).fechaNacimiento(),
+                        datosAutor.get(i).fechaFallecimiento());
 // Resto del código omitido...
 ```
 
+#### 13.3 Buscar autor por nombre: 
+
+   Si has echado un vistazo al sitio de la API es posible realizar la búsqueda de libro o autor con la consulta hecha con search? - sin embargo, en este caso te desafiamos a realizar la consulta por nombre de autor en la base de datos creada para nuestro proyecto.
+
+```java
+   public interface AutorRepository extends JpaRepository<Autor,Long> {
+    /**
+     * Busca un autor por su nombre, ignorando mayúsculas y minúsculas.
+     *
+     * @param nombreAutor Nombre del autor a buscar.
+     * @return Una instancia de Autor envuelta en un Optional.
+     */
+    Optional<Autor> findByNombreContainingIgnoreCase(String nombreAutor);
+// Resto del código omitido...
+
+```
 
 
+```java
+// Método para mostrar libros por idioma desde la base de datos
+    public void mostrarLibrosPorIdioma() {
+        libros = libRepositorio.findAll();
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("-------------- Búsqueda de libros registrados en la BD por idioma ----------------");
+        System.out.println("----------------------------------------------------------------------------------");
+                System.out.println("Ingrese el idioma del que desea buscar los libros: en (english) o es (español)");
+        String idiomaBuscado = teclado.nextLine();
+        List<Libro> librosBuscados = libros.stream()
+                .filter(l -> l.getIdioma().contains(idiomaBuscado))
+                .collect(Collectors.toList());
+        librosBuscados.forEach(System.out::println);
+    }
+```
 &nbsp;
 
-#### 12.3  Registros con Marca de Tiempo: [![Static Badge](https://img.shields.io/badge/status-OK-gree)](#)
+#### 13.4. **Listar autores con otras consultas**:
 
-Se creo la clase `LocalDateTimeAdapter`, para cumplir con este adicional del desafio.
-
-La clase `LocalDateTimeAdapter` es una clase utilizada para adaptar la serialización y deserialización de objetos `LocalDateTime` al formato JSON utilizando la biblioteca Gson de Google. Su objetivo es proporcionar la capacidad de convertir objetos `LocalDateTime` a formato JSON y viceversa de manera que puedan ser almacenados y recuperados adecuadamente.
-
-- **Implementación**:
-  - La clase implementa las interfaces `JsonSerializer` y `JsonDeserializer` de Gson para personalizar la serialización y deserialización de objetos `LocalDateTime`.
-  - Utiliza un objeto `DateTimeFormatter` para definir el formato de fecha y hora deseado ("yyyy-MM-dd HH:mm:ss").
-  - Sobrescribe los métodos `serialize` y `deserialize` para convertir entre `LocalDateTime` y JSON.
-
-- **Método `serialize`**:
-  - Este método toma un objeto `LocalDateTime` como entrada y devuelve un `JsonElement`, que en este caso es un `JsonPrimitive` que contiene la fecha y hora formateadas según el patrón definido por `DateTimeFormatter`.
-
-- **Método `deserialize`**:
-  - Este método toma un `JsonElement` (que se espera que sea un `JsonPrimitive` con una cadena representando una fecha y hora) y lo convierte de nuevo a un objeto `LocalDateTime` utilizando el formato definido por `DateTimeFormatter`.
-
-En resumen, `LocalDateTimeAdapter` es una clase útil para adaptar la serialización y deserialización de objetos `LocalDateTime` al formato JSON, lo que facilita su almacenamiento y recuperación en aplicaciones que utilizan Gson para el manejo de JSON.
-
-
-*Fragmento de codigo utilizado en la Class `RegistroConversion.java` donde se crea  `registros_data_time.json` en formato json, donde se registran y actualizan las consultas realizadas, incluyendo información sobre qué monedas se convirtieron y en qué fecha para cumplir con la parte adicional de este challenge:*
+  Implementar otras consultas con los atributos de año de nacimiento y fallecimiento de los autores. Siéntete libre de explorar e implementar estas características adicionales.
+  
 ```java
- // Resto del código omitido...
-
-package adapters;
-
-  // Resto del código omitido...
-/** Clase interna para adaptar la serialización y deserialización de LocalDateTime. */
-public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    @Override
-    public JsonElement serialize(LocalDateTime src, java.lang.reflect.Type typeOfSrc, JsonSerializationContext context) {
-        return new JsonPrimitive(formatter.format(src));
-    }
-
-    @Override
-    public LocalDateTime deserialize(JsonElement json, java.lang.reflect.Type typeOfT, JsonDeserializationContext context)
-            throws JsonParseException {
-        return LocalDateTime.parse(json.getAsString(), formatter);
-    }
-}
-
-  // Resto del código omitido...
     
-```
+    // Método para buscar autores nacidos después de una fecha en la base de datos
+    public void buscarAutoresNacidosDespuesDeFecha() {
+        try {
+            System.out.println("----------------------------------------------------------------------------------");
+            System.out.println("------------ Búsqueda de autores nacidos después de un año específico ------------");
+            System.out.println("----------------------------------------------------------------------------------");
+            System.out.print("Ingrese el año para buscar autores nacidos después de: ");
+            int fechaLimite = Integer.parseInt(teclado.nextLine());
 
+            List<Autor> autores = autorRepository.findByFechaNacimientoAfter(fechaLimite);
 
-*Fragmento del registro del archivo `registros_data_time.json` en formato json, donde se registran y actualizan las consultas realizadas, incluyendo información sobre qué monedas se convirtieron y en qué fecha para cumplir con la parte adicional de este challenge:*
+            if (autores.isEmpty()) {
+```
+    
+&nbsp;
+ 
+### 14. Ejecución del Proyecto
 
-```
- {
-    "conversion": {
-      "Moneda_Origen": "ARS",
-      "Moneda_Destino": "USD",
-      "Monto_a_Convertir": 100500.0,
-      "Resultado": 116.178,
-      "Tasa_Conversion": 0.001156
-    },
-    "timestamp": "2024-04-22 14:15:58"
-  },
-  {
-    "conversion": {
-      "Moneda_Origen": "USD",
-      "Moneda_Destino": "COP",
-      "Monto_a_Convertir": 500.0,
-      "Resultado": 1956948.2,
-      "Tasa_Conversion": 3913.8964
-    },
-    "timestamp": "2024-04-22 14:17:03"
-  }
-```
-            
-### 13. Ejecución del Proyecto
 Para ejecutar el proyecto, sigue estos pasos:
 
 * Clona o descarga desde Github el repositorio en tu disco local.
@@ -989,71 +935,60 @@ Para ejecutar el proyecto, sigue estos pasos:
 * Configura las dependencias y ajusta la configuración según sea necesario.
 * Corre la aplicación para interactuar con consola.
 
-Para utilizar el conversor de moneda, ejecuta la clase `Principal`. Se mostrará un menú donde puedes seleccionar las opciones de conversión. Selecciona la opción deseada e ingresa el monto a convertir. El resultado se mostrará en la pantalla.
-* Asegúrate de revisar la documentación de la API de Exchange Rate-API para obtener la clave de API necesaria para realizar solicitudes y obtener tasas de cambio actualizadas.
 
 ### 14. Video Y Capturas de pantalla
 
 &nbsp;
+![gutendexgeneral](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/51186fd4-403d-466f-9baf-6c8a12ddb378)
+&nbsp;
 
-https://github.com/nandojmj/Alura_Challenge_Conversor_de_Moneda/assets/156966097/5644642c-1cd9-4e2e-b7d3-4719e0f3a117
+![Captura](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/5c211392-b33f-49c2-a588-36cafdf82f12)
 
 &nbsp;
+![consultaliteraturapostgresql](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/4432d9d9-4227-4e17-b202-2b198a29d7d9)
+
+&nbsp;
+
 
 ![ ](https://github.com/nandojmj/conversor_prueba/blob/main/recursos/images/Captura.png)  
 
 &nbsp;
 
-![ ](https://github.com/nandojmj/conversor_prueba/blob/main/recursos/images/Captura2.png) 
+
+![Literatura_postman_ingles](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/7ecfd3be-a9c2-4162-8837-a732b538f4ca)
+
+&nbsp;
+![gutendexflow3](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/c8b69f59-933a-459a-afe4-bee38c48d157)
+
 
 &nbsp;
 
-![ ](https://github.com/nandojmj/conversor_prueba/blob/main/recursos/images/Captura3.png)  
+![Literatura_postman_Español](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/af2e8e92-517d-4bc9-a9bd-3b020c64ce46)
 
-&nbsp;
-
-![ ](https://github.com/nandojmj/conversor_prueba/blob/main/recursos/images/Captura5.png) 
 
 
 
 ### Glossary [![Static Badge](https://img.shields.io/badge/status-under%20construction-%2393a8ac)](#)
 
-1. **API (Interfaz de Programación de Aplicaciones):**
-   - Un conjunto de métodos y funciones que permite la comunicación entre diferentes componentes de software. En este contexto, se refiere a la API de Exchange Rate-API utilizada para obtener tasas de cambio.
+- **DTO (Data Transfer Object)**: Objetos utilizados para transferir datos entre el backend y el frontend.
+- **JPA (Java Persistence API)**: API estándar de Java para mapear objetos a una base de datos relacional.
+- **Hibernate**: Framework de mapeo objeto-relacional para Java.
+- **API (Application Programming Interface)**: Conjunto de reglas y definiciones que permite a las aplicaciones interactuar entre sí.
+- **DTO (Data Transfer Object)**: Patrón de diseño que se utiliza para transferir datos entre subsistemas de un software. En este contexto, se utilizan para transferir datos entre el backend y el frontend de la aplicación.
+- **JPA (Java Persistence API)**: API estándar de Java para el mapeo objeto-relacional. Permite mapear objetos de dominio a tablas de base de datos y viceversa.
+- **Hibernate**: Framework de mapeo objeto-relacional para Java. Facilita el trabajo con JPA y proporciona funcionalidades adicionales para interactuar con la base de datos.
+- **Spring Boot**: Framework de desarrollo de aplicaciones Java que facilita la creación de aplicaciones basadas en Spring con una configuración mínima. Proporciona un conjunto de bibliotecas y herramientas que simplifican el desarrollo de aplicaciones empresariales.
+- **PostgreSQL**: Sistema de gestión de bases de datos relacional de código abierto y potente. Se utiliza en este proyecto como el motor de base de datos para almacenar los libros y autores.
+- **Maven**: Herramienta de gestión de proyectos de software que se utiliza para construir y gestionar proyectos Java. Facilita la gestión de dependencias, la compilación y la ejecución de pruebas, entre otras tareas.
+- **DataSource**: Configuración que define la conexión a la base de datos, incluyendo la URL, el nombre de usuario y la contraseña.
+- **Hibernate Dialect**: Configuración que especifica el dialecto SQL que Hibernate debe utilizar para interactuar con la base de datos. En este caso, se utiliza el dialecto de HSQL.
+- **Spring Data JPA**: Parte del ecosistema de Spring que simplifica el acceso a datos en aplicaciones basadas en Spring. Proporciona una abstracción sobre JPA y facilita la implementación de repositorios de datos.
+- **CascadeType**: Enumeración que define las operaciones de cascada que deben aplicarse a las relaciones entre entidades. Por ejemplo, si se elimina un autor, las operaciones en cascada pueden eliminar automáticamente los libros asociados a ese autor.
+- **FetchType**: Enumeración que define cómo se cargan los datos asociados a una relación entre entidades. FetchType.EAGER indica que los datos deben cargarse de forma inmediata, mientras que FetchType.LAZY indica que los datos deben cargarse solo cuando sean necesarios.
+- **Principal**: En el contexto de este proyecto, se refiere a la clase principal que coordina las operaciones principales de la aplicación, como la consulta y el almacenamiento de datos.
+- **Estructura del Proyecto**: Organización y disposición de los archivos y paquetes que componen el proyecto. Una estructura de proyecto bien definida facilita la comprensión y el mantenimiento del código.
+- **Diagrama de Estructura del Proyecto**: Representación visual de la estructura del proyecto, que muestra cómo se relacionan los diferentes componentes y cómo fluye la información a través de ellos. Ayuda a comprender la arquitectura y el diseño del proyecto.
 
-2. **URI (Identificador Uniforme de Recursos):**
-   - Una cadena de caracteres que identifica un recurso en la web de manera única. Se utiliza para construir la dirección de la API a la que se enviarán las solicitudes HTTP.
-
-3. **HTTP (Protocolo de Transferencia de Hipertexto):**
-   - El protocolo de comunicación utilizado para transferir datos en la web. En este proyecto, se utiliza para enviar solicitudes y recibir respuestas de la API.
-
-4. **JSON (Notación de Objetos JavaScript):**
-   - Un formato ligero de intercambio de datos que es fácil de leer y escribir para los humanos, y fácil de parsear y generar para las máquinas. Se utiliza para representar los datos recibidos de la API y realizar la serialización y deserialización de objetos en Java.
-
-5. **Gson:**
-   - Una biblioteca de Java que se utiliza para serializar y deserializar objetos Java en formato JSON y viceversa. En este proyecto, se utiliza Gson para manejar la comunicación con la API y convertir los datos recibidos en objetos Java.
-
-6. **HttpClient:**
-   - Una clase en Java que proporciona una interfaz para enviar solicitudes HTTP y recibir respuestas. Se utiliza para realizar solicitudes a la API de Exchange Rate-API y obtener tasas de cambio.
-
-7. **InputMismatchException:**
-   - Una excepción en Java que se lanza cuando se espera un tipo específico de entrada, pero se recibe un tipo diferente. Se maneja en este proyecto para manejar entradas no válidas del usuario en el menú de opciones.
-
-8. **LocalDateTime:**
-   - Una clase en Java que representa una fecha y hora específica sin referencia a una zona horaria. Se utiliza para marcar la fecha y hora en que se realiza una conversión de moneda y para leer y escribir el historial de conversiones.
-
-9. **DateTimeFormatter:**
-   - Una clase en Java que permite formatear y analizar fechas y horas en diferentes formatos. Se utiliza para formatear la fecha y hora en el historial de conversiones.
-
-10. **JsonReader:**
-    - Una clase en Gson que se utiliza para leer datos JSON de una secuencia de entrada. En este proyecto, se utiliza para leer la respuesta JSON de la API de Exchange Rate-API.
-
-11. **JsonDeserializer y JsonSerializer:**
-    - Interfaces en Gson que permiten personalizar la serialización y deserialización de objetos Java a JSON y viceversa. Se utilizan para adaptar la serialización y deserialización de LocalDateTime en este proyecto.
-
-12. **FileNotFoundException:**
-    - Una excepción en Java que se lanza cuando se intenta acceder a un archivo que no existe. Se maneja en este proyecto al leer el historial de conversiones desde un archivo JSON.
-    - 
 
 ### MIT License
 
