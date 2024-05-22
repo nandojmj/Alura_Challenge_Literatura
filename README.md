@@ -396,57 +396,43 @@ Esta interfaz define métodos para convertir datos de JSON a objetos Java.
 
 
 ```
-*En este diagrama:*
 
-- `Principal` utiliza `MenuHandler` para manejar las opciones del menú y realizar las conversiones.
-- `MenuHandler` interactúa con `Conversion` para realizar las conversiones de moneda.
-- `Conversio`n utiliza `ConversionResponse` para obtener los datos de la API de tasas de cambio.
-- `Conversion` también interactúa con `RegistroConversion` para mantener un registro de las conversiones realizadas.
-- Conversion utiliza `LocalDateTimeAdapter` para serializar y deserializar objetos `LocalDateTime`.
+Este diagrama muestra la relación entre las principales clases y componentes del proyecto "Alura Literatura". En la parte superior se encuentran las clases principales como LiteraturaApplication y Principal, que actúan como la interfaz de usuario y coordinan las operaciones principales del sistema.
+
+Las interfaces LibroRepository y AutorRepository interactúan directamente con la capa de acceso a datos y proporcionan métodos para realizar operaciones CRUD en libros y autores. Estas interfaces son implementadas por clases específicas de Spring Data JPA que manejan la comunicación con la base de datos PostgreSQL.
+
+Los servicios LibroServicio y AutorServicio encapsulan la lógica de negocio relacionada con la gestión de libros y autores. Estos servicios utilizan los repositorios para acceder a los datos y proporcionan métodos para convertir los datos de las entidades de dominio en DTOs (Data Transfer Objects) que son más adecuados para ser enviados al frontend de la aplicación.
+
+La interfaz IConvierteDatos define los métodos para convertir datos entre diferentes formatos, como JSON y objetos Java. Las implementaciones concretas de esta interfaz, ConvierteDatos y ConvierteDatosAutor, utilizan la biblioteca Jackson ObjectMapper para realizar la conversión de datos.
+
+Finalmente, los DTOs LibroDTO y AutorDTO representan versiones simplificadas de las entidades de dominio Libro y Autor. Estos DTOs se utilizan para transferir datos entre el backend y el frontend de la aplicación, evitando la exposición directa de las entidades de dominio y facilitando la comunicación entre las diferentes capas del sistema.
 
 &nbsp;
 
-*Fragmento de codigo utilizado en la clase `Conversion`:*
+*Fragmento de codigo utilizado en la clase `libro.java`:*
 ```java
+@Entity
+@Table(name="libros")
+public class Libro {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String titulo;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "autor_id")
+    private Autor autor;
+    private String idioma;
+    private Double descargas;
 
-/**
- * Clase que representa una conversión entre monedas.
- */
-public class Conversion {
+    // Constructor sin argumentos
+    public Libro() {}
 
-    /** El código de la moneda de origen. */
-    @SerializedName("Moneda_Origen")
-    private String monedaOrigen;
-
-    /** El código de la moneda de destino. */
-    @SerializedName("Moneda_Destino")
-    private String monedaDestino;
-
-    /** El monto o cantidad de moneda a convertir. */
-    @SerializedName("Monto_a_Convertir")
-    private double monto;
-
-    /** El resultado de la conversión. */
-    @SerializedName("Resultado")
-    private double resultado;
-
-    /** La tasa de conversión. */
-    @SerializedName("Tasa_Conversion")
-    private double conversionRate;
-
-    /** Constructor vacío. */
-    public Conversion() {}
-
-    /**
-     * Constructor con parámetros.
-     * @param monedaOrigen El código de la moneda de origen.
-     * @param monedaDestino El código de la moneda de destino.
-     * @param monto El monto a convertir.
-     */
-    public Conversion(String monedaOrigen, String monedaDestino, double monto) {
-        this.monedaOrigen = monedaOrigen;
-        this.monedaDestino = monedaDestino;
-        this.monto = monto;
+    // Constructor con argumentos
+    public Libro(String titulo, Autor autor, List<String> idiomas, Double descargas) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.idioma = idiomas != null && !idiomas.isEmpty() ? String.join(",", idiomas) : null;
+        this.descargas = OptionalDouble.of(descargas).orElse(0);
     }
  
  // Resto del código omitido...
@@ -454,257 +440,321 @@ public class Conversion {
 ```
 &nbsp;
 
+&nbsp;
 
-### Clase ConversionResponse
-
-La clase se utiliza para representar los datos de respuesta de una conversión de moneda obtenida de la API externa. Aquí está un resumen de su propósito y uso:
-
-__a. Atributos:__ La clase tiene tres atributos que representan los datos de la conversión:
-       - `monedaOrigen`: Representa la moneda de origen de la conversión.
-       - `monedaDestino`: Representa la moneda de destino de la conversión.
-       - `conversionRate`: La tasa de conversión entre la moneda base y la moneda destino.
-       - `resultado`: Representa el resultado de la conversión.
-       
-__b. Anotaciones de SerializedName:__ Las anotaciones `@SerializedName` se utilizan para especificar el nombre de los campos en el 
-      JSON que se utilizarán para mapear los datos a los atributos de la clase. Esto es útil cuando los nombres de los campos en el 
-      JSON no coinciden con los nombres de los atributos en la clase.
-      
-__c. Getters y setters:__ Se proporcionan métodos para acceder y modificar los atributos de la clase.
-
-__d. Método toString:__ Se sobrescribe el método `toString` para proporcionar una representación de cadena de la clase. Esto es útil 
-      para imprimir fácilmente los objetos de tipo  `ConversionResponse` en forma legible para los humanos.     
-    
-En resumen, la clase `ConversionResponse` se utiliza como un contenedor de datos para representar la respuesta de una conversión de moneda, facilitando el procesamiento y manipulación de estos datos en el código del programa.
-
- &nbsp;
-
-*Fragmento de codigo utilizado en la clase `ConversionResponse.java`:*
+*Fragmento de codigo utilizado en la clase `autor.java`:*
 ```java
- // Resto del código omitido...
-     /**
- * Clase que representa la respuesta de la API de ExchangeRate-API.
- * Proporciona métodos para acceder a los datos de la conversión.
- */
-public class ConversionResponse {
+@Entity
+@Table(name = "autores")
+public class Autor {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String nombre;
+    private int fechaNacimiento;
+    private int fechaFallecimiento;
 
-    /** El código de la moneda base en la conversión. Índices de la API de ExchangeRate-API:
-     * "base_code"."target_code" "conversion_rate" "conversion_result"*/
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Libro> libros;
 
-    /** El código de la moneda origen en la conversión. */
-    @SerializedName("base_code")
-    private String monedaOrigen;
-
-    /** El código de la moneda destino en la conversión. */
-    @SerializedName("target_code")
-    private String monedaDestino;
-
-    /** La tasa de conversión entre la moneda base y la moneda destino. */
-    @SerializedName("conversion_rate")
-    private double conversionRate;
-
-    /** El resultado de la conversión. */
-    @SerializedName("conversion_result")
-    private double resultado;
-
-    /** Obtiene el código de la moneda base. */
-    public String getMonedaOrigen() {
-        return monedaOrigen;
+    // Constructor sin argumentos
+    public Autor() {
     }
 
-    /** Establece el código de la moneda base. */
-    public void setMonedaOrigen(String monedaOrigen) {
-        this.monedaOrigen = monedaOrigen;
+    // Constructor con argumentos
+    public Autor(String nombre, int fechaNacimiento, int fechaFallecimiento) {
+        this.nombre = nombre;
+        this.fechaNacimiento = fechaNacimiento;
+        this.fechaFallecimiento = fechaFallecimiento;
     }
-// Resto del código omitido...
  
-```
-&nbsp;
-
-### Clase RegistroConversion
-
-La clase `RegistroConversion` se utiliza para representar un registro de conversión, que incluye los detalles de la conversión realizada y la marca de tiempo en la que se realizó. Aquí está un resumen de su propósito y uso:
-
-__a. Atributos:__ La clase tiene dos atributos:
-      - `conversion`: Representa el objeto de conversión asociado a este registro.
-          - `timestamp`: Representa la marca de tiempo del registro, indicando cuándo se realizó la conversión.
-
-__b. Constructor__
-      - `RegistroConversion(Conversion conversion)`: Constructor que inicializa un registro de conversión con 
-         la conversión 
-         y la marca de tiempo actual.
-          - Parámetros:
-             - `conversion`: La conversión de moneda que se está registrando.
-
-__c. Métodos de acceso__
-         - `getConversion()`: Devuelve la conversión asociada con este registro.
-         - `setConversion(Conversion conversion)`: Establece la conversión asociada con este registro.
-             - Parámetros:
-                 - `conversion`: La conversión a establecer.
-         - `getTimestamp()`: Devuelve la marca de tiempo de este registro.
-         - `setTimestamp(LocalDateTime timestamp)`: Establece la marca de tiempo de este registro.
-             - Parámetros:
-                 - `timestamp`: La marca de tiempo a establecer.
-
-__d. Método `toString()`__
-            - `toString()`: Genera una representación en forma de cadena de este registro de conversión, incluyendo 
-               la moneda de origen, la moneda de destino, el monto, la tasa de conversión, el resultado y la marca 
-               de tiempo en un formato legible.
-
-Ejemplo de uso:
-
-```java
-// Crear una instancia de Conversion
-Conversion conversion = new Conversion("USD", "EUR", 100.0);
-
-// Crear un registro de conversión
-RegistroConversion registro = new RegistroConversion(conversion);
-
-// Imprimir el registro
-System.out.println(registro);
-```
-&nbsp;
-```
-Registro de Conversión: {
-  Moneda de Origen: USD
-  Moneda de Destino: EUR
-  Monto: 100.0
-  Tasa de Conversión: 0.8325
-  Resultado: 83.25
-  Marca de Tiempo: 2024-04-23 09:30:15
-}
-```
-
-&nbsp;
-
-*Fragmento de codigo utilizado en la `Class RegistroConversion.java`:*
-```java
- package conversion;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
- public class RegistroConversion {
-    // Atributos
-    private Conversion conversion; // Objeto de conversión asociado a este registro
-    private LocalDateTime timestamp; // Marca de tiempo del registro
-
-    // Constructor
-    public RegistroConversion(Conversion conversion) {
-        this.conversion = conversion; // Asigna el objeto de conversión proporcionado
-        this.timestamp = LocalDateTime.now(); // Establece la marca de tiempo actual
-    }
-
-    // Getters y setters
-    public Conversion getConversion() {
-        return conversion; // Retorna el objeto de conversión asociado a este registro
-    }
-
-    public void setConversion(Conversion conversion) {
-        this.conversion = conversion; // Establece el objeto de conversión asociado a este registro
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp; // Retorna la marca de tiempo del registro
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp; // Establece la marca de tiempo del registro
-    }
  // Resto del código omitido...
 
- 
 ```
+
 &nbsp;
 
 
-
-### 10. Interactuando con el usuario
+### 6. Interactuando con el usuario
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
 [![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
 [![Static Badge](https://img.shields.io/badge/Pruebas_finales-%2340a5ff?style=flat)](#)
 
-En esta etapa del desafío, se solicito  la interacción con el usuario, implementando una interfaz textual a través de la consola que presenta opciones de conversión de monedas. La estructura incluirá un menú dentro de un bucle de repetición, permitiendo al usuario seleccionar opciones numéricas y proporcionar datos para la conversión, utilizando la  `clase Scanner` para capturar la entrada del usuario.
-
-Se creo la clase `MenuHandler` que  proporciona métodos para mostrar un menú de opciones de conversión de moneda y ejecutar la opción seleccionada por el usuario.
-Función:
-La clase MenuHandler realiza las siguientes funciones:
-- Muestra un menú con varias opciones de conversión de moneda.
-- Ejecuta la opción seleccionada por el usuario, realizando la conversión correspondiente.
-- Gestiona la entrada del usuario para elegir otras monedas a convertir.
-
+En esta etapa del desafío, se solicito  la interacción con el usuario, El método Main debe implementar la interfaz CommandLineRunner y su método run() donde deberás llamar un método para exhibir el menu. En este método, debes crear un bucle para presentar a tu usuario las opciones de insercion y consulta. El usuario deberá seleccionar un número que corresponderá a la opcion numérica y proporcionar los datos que la aplicación recibirá, utilizando la clase Scanner para capturar la entrada do usuário.
 
   &nbsp;
-  
-Ejemplo:
 
-```java
-// Crear una instancia de Conversion
-Conversion conversion = new Conversion();
-Scanner lectura = new Scanner(System.in);
 
-// Mostrar el menú de opciones
-MenuHandler.mostrarMenu();
-
-// Leer la opción seleccionada por el usuario
-int opcion = lectura.nextInt();
-
-// Ejecutar la opción seleccionada
-MenuHandler.ejecutarOpcion(opcion, conversion, lectura);
-
-// Cerrar el scanner después de su uso
-lectura.close();
-```
-En resumen facilita la interacción del usuario con el programa de conversión de moneda. Proporciona métodos para mostrar un menú de opciones, ejecutar la opción seleccionada y realizar la conversión correspondiente.
-
-&nbsp;
-
-*Fragmento de codigo utilizado en la Class MenuHandler.java:*
 ```java
  // Resto del código omitido...
-
-public class MenuHandler {
-    // Método para mostrar el menú de opciones
-    public static void mostrarMenu() {
-        System.out.println("************************************************************");
-        System.out.println("""
-                1- Convertir de COP (peso colombiano) a USD (dólar).
-                2- Convertir de USD (dólar) a COP (peso colombiano).
-                3- Convertir de BRL (real brasileño) a USD (dólar).
-                4- Convertir de USD (dólar) a BRL (real brasileño).
-                5- Convertir de ARS (peso argentino) a USD (dólar).
-                6- Convertir de USD (dólar) a ARS (peso argentino).
-                7- Elegir otras monedas para convertir.
-                8- Salir
-                Elija una opción:""");
+    // Método para mostrar el menú en consola
+    private void mostrarMenu() {
+        var menu = """
+                
+                -----------------------------------------------------------------------------
+                                 Challenge Literatura Alura-Oracle ONE G6
+                -----------------------------------------------------------------------------
+                Por favor, seleccione una opción del menú ingresando el número correspondiente:
+                1- Consultar y guardar libros desde la API 
+                2- Listar libros registrados en la BD
+                3- Listar autores registrados en la BD
+                4- Buscar autores vivos en un determinado año de la BD
+                5- Buscar libros registrados en la BD por idioma
+                6- Buscar autores por nombre en la BD
+                7- Buscar los 10 libros más descargados de la API
+                8- Buscar los 10 libros más descargados en la BD
+                9- Búsqueda de autores nacidos después de un año específico en la BD   
+                10- Buscar autores fallecidos antes de un año específico en la BD  
+                0 - Salir
+            """;
+        System.out.println(menu);
     }
 
-    // Método para ejecutar la opción seleccionada por el usuario
-    public static void ejecutarOpcion(int opcion, Conversion conversion, Scanner lectura) {
-        switch (opcion) {
-            case 1:
-                convertirMoneda("COP", "USD", conversion, lectura); // Convertir de COP a USD
-                break;
-             case 2:
-                convertirMoneda("USD", "COP", conversion, lectura); // Convertir de USD a COP
-                break;
-            case 3:
-                convertirMoneda("BRL", "USD", conversion, lectura); // Convertir de BRL a USD
-                break;
-
-             // Resto del código omitido...
-
-             case 8:
-                System.out.println("¡Gracias por usar el convertidor! ¡Hasta luego!"); // Mensaje de despedida
-                System.exit(0); // Finaliza el programa
-            default:
-                System.out.println("Opción inválida. Por favor, seleccione una opción válida del menú."); // Mensaje de opción inválida
-                break;
-        }
+    // Método para obtener la opción del usuario
+    private int obtenerOpcionDelUsuario() {
+        System.out.print("Ingrese su opción: ");
+        return teclado.nextInt();
     }
-            // Resto del código omitido...
+ // Resto del código omitido...
 ```
 &nbsp;
+
+### 7. Consultar libros
+[![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
+[![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
+[![Static Badge](https://img.shields.io/badge/Pruebas_finales-%2340a5ff?style=flat)](#)
+
+En esta parte del desafio, realizamos la consulta por título del libro en la API para retener el primer resultado obtenido. Un libro debe tener los siguientes atributos:
+
+- Título;
+- Autor;
+- Idiomas;
+- Número de Descargas.
+
+Con esta funcionalidad lista, será posible presentar en la consola un listado de todos los libros que ya fueron buscados.
+
+Además, también debes posibilitar al usuario ver un listado con base en el idioma que uno o más libros fueron escritos, con la ayuda de las derived queries.
+
+En resumen tenemos estas dos funcionalidades obligatorias en el proyecto:
+
+- Búsqueda de libro por título
+- Lista de todos los libros
+
+*Fragmento de codigo utilizado en la clase `DatosLibro.java`:*
+```java
+**
+ * Clase que representa los datos de un libro obtenidos de una fuente externa.
+ */
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record DatosLibro(
+    @JsonAlias("title") String titulo,
+    @JsonAlias("name") Autor autor,
+    @JsonAlias("languages") List<String> idioma,
+    @JsonAlias("download_count") Double descargas){
+}
+
+ 
+ // Resto del código omitido...
+
+```
+
 &nbsp;
+
+
+  ### 8. Consultar Autores
+[![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
+[![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
+[![Static Badge](https://img.shields.io/badge/Pruebas_finales-%2340a5ff?style=flat)](#)
+
+Como podemos ver en el sitio web de la API, cada libro tiene datos relacionados con sus autores, en este caso el cuerpo de json recibe una lista de autores por libro, donde cada autor tiene tres características:
+
+Nombre;
+Año de nacimiento;
+Año de fallecimiento.
+
+Al guardar los datos de los autores, tendremos la opción de listado de los autores de los libros buscados.
+
+Además, pensando en los años de nacimiento y fallecimiento, es posible incluso realizar una consulta de autores vivos en un determinado año. 
+
+En resumen tenemos estas dos funcionalidades obligatorias relacionadas a los autores:
+
+Lista de autores
+Listar autores vivos en determinado año
+
+*Fragmento de codigo utilizado en la clase `DatosLibro.java`:*
+```java
+/**
+ * Clase que representa los datos de un autor obtenidos de una fuente externa.
+ */
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record DatosAutor(
+        @JsonAlias("name") String nombre,
+        @JsonAlias("birth_year") int fechaNacimiento,
+        @JsonAlias("death_year") int fechaFallecimiento) {
+}
+
+ // Resto del código omitido...
+
+```
+
+&nbsp;
+
+
+  
+
+  ### 9. Persistencia de datos
+[![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
+[![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
+[![Static Badge](https://img.shields.io/badge/Pruebas_finales-%2340a5ff?style=flat)](#)
+
+En esta parte se nos solicito enficarnos en construir una base de datos, con tablas y atributos relacionados a nuestros objetos de interés: Libro y Autor.
+
+En este desafío vamos a utilizar la base de datos llamada PostgreSQL, una de las bases de datos open source más utilizadas en el mercado.
+
+Sugerimos la creación de clases de entidad/modelo para Libro y Autor, así como también sus respectivas interfaces de repositorio para manejar inserción y consultas en la base de datos.
+
+→ No olvides usar las anotaciones correctas y de importar JpaRepository, porque estamos trabajando con un proyecto Spring con Spring Data JPA, así que puede manejar las funciones necesarias para nuestro desafío java con persistencia de datos.
+
+Al crear los repositorios de libros y autores, recuerda realizar la conversión de los atributos del libro presentes en el resultado json para un objeto java correspondiente al libro, así quedará más fácil manejar los datos obtenidos en tu proyecto.
+
+[IMPORTANTE] Al insertar un libro en la base también deberás insertar su autor y así mantener una relación entre los dos objetos vía atributo de identificación (o como lo llamamos, el famoso ID).
+
+*Fragmento de codigo utilizado en la clase `LibroRepository.java`:*
+```java
+
+/**
+ * Repositorio para realizar operaciones relacionadas con la entidad Libro en la base de datos.
+ */
+public interface LibroRepository extends JpaRepository<Libro,Long> {
+
+    /**
+     * Busca un libro por su título, ignorando mayúsculas y minúsculas.
+     *
+     * @param nombreLibro Título del libro a buscar.
+     * @return Una instancia de Libro envuelta en un Optional.
+     */
+
+    Optional<Libro> findByTituloContainingIgnoreCase(String nombreLibro);
+}
+
+ // Resto del código omitido...
+
+```
+&nbsp;
+
+*Fragmento de codigo utilizado en la clase `AutorRepository.java`:*
+```java
+/**
+ * Repositorio para realizar operaciones relacionadas con la entidad Autor en la base de datos.
+ */
+
+public interface AutorRepository extends JpaRepository<Autor,Long> {
+    /**
+     * Busca un autor por su nombre, ignorando mayúsculas y minúsculas.
+     *
+     * @param nombreAutor Nombre del autor a buscar.
+     * @return Una instancia de Autor envuelta en un Optional.
+     */
+    Optional<Autor> findByNombreContainingIgnoreCase(String nombreAutor);
+
+    /**
+     * Busca autores nacidos después de un año específico.
+     *
+     * @param fecha Año límite de nacimiento.
+     * @return Una lista de autores nacidos después del año especificado.
+     */
+    @Query("SELECT a FROM Autor a WHERE a.fechaNacimiento > :fecha")
+    List<Autor> findByFechaNacimientoAfter(@Param("fecha") int fecha);
+ // Resto del código omitido...
+
+```
+&nbsp;
+
+  ### 10. Listando libros por idiomas
+[![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
+[![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
+[![Static Badge](https://img.shields.io/badge/Pruebas_finales-%2340a5ff?style=flat)](#)
+
+Se nos solicito que una vez que ya tienes libros y autores guardados en tu base de datos, ¿qué tal exhibir estadísticas sobre ellos a tu usuario? Aprovecha los recursos de Streams de Java y derived queries para brindar tu usuario con estadísticas sobre la cantidad de libros en un determinado idioma en la base de datos.
+
+No es necesario crear opciones para todos los idiomas. Elija como mínimo dos idiomas.
+
+En resumen tenemos esta funcionalidad obligatoria en el proyecto:
+
+Exhibir cantidad de libros en un determinado idioma
+
+
+*Fragmento de codigo utilizado en la clase `Principal.java`:*
+```java
+
+  public void mostrarLibrosPorIdioma() {
+        libros = libRepositorio.findAll();
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("-------------- Búsqueda de libros registrados en la BD por idioma ----------------");
+        System.out.println("----------------------------------------------------------------------------------");
+                System.out.println("Ingrese el idioma del que desea buscar los libros: en (english) o es (español)");
+        String idiomaBuscado = teclado.nextLine();
+        List<Libro> librosBuscados = libros.stream()
+                .filter(l -> l.getIdioma().contains(idiomaBuscado))
+                .collect(Collectors.toList());
+        librosBuscados.forEach(System.out::println);
+    }
+
+ // Resto del código omitido...
+
+```
+ ### 11. Listando autores vivos en determinado año
+[![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
+[![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
+[![Static Badge](https://img.shields.io/badge/Pruebas_finales-%2340a5ff?style=flat)](#)
+
+Se nos solicito que una vez que ya tienes libros y autores guardados en tu base de datos, cambiar el método para listar los autores vivos en determinado año. Para eso, debes utilizar las derived queries para recuperar todos los autores que estaban vivos en el año que el usuario te informará.
+
+se realizaron varias consultas con las derived queries:
+
+*Fragmento de codigo utilizado en la clase `Principal.java`:*
+```java
+
+     */
+    Optional<Autor> findByNombreContainingIgnoreCase(String nombreAutor);
+
+    /**
+     * Busca autores nacidos después de un año específico.
+     *
+     * @param fecha Año límite de nacimiento.
+     * @return Una lista de autores nacidos después del año especificado.
+     */
+    @Query("SELECT a FROM Autor a WHERE a.fechaNacimiento > :fecha")
+    List<Autor> findByFechaNacimientoAfter(@Param("fecha") int fecha);
+
+    /**
+     * Busca autores fallecidos antes de un año específico.
+     *
+     * @param fecha Año límite de fallecimiento.
+     * @return Una lista de autores fallecidos antes del año especificado.
+     */
+    @Query("SELECT a FROM Autor a WHERE a.fechaFallecimiento < :fecha")
+    List<Autor> findByFechaFallecimientoBefore(@Param("fecha") int fecha);
+
+ // Resto del código omitido...
+
+```
+
+*Fragmento de codigo utilizado en la clase `Principal.java`:*
+```java
+ public void mostrarAutoresVivosEnUnDeterminadoAno() {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("------------- Búsqueda de autores vivos en un año especifico ---------------------");
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.print("Ingrese un año: ");
+        int anio = teclado.nextInt();
+        List<Autor> autores = autorRepository.findAll();
+// Resto del código omitido...
+
+```
+
 
 ### 11. **Hacer un README:** [![Static Badge](https://img.shields.io/badge/status-OK-gree)](#)
 Uno de los pasos más importantes al participar en una selección de trabajo es resolver un desafío propuesto por la empresa con la información de la resolución, y generalmente esto debe estar en el README. ¿Y qué es el README? Es un archivo con extensión .md y es un documento con la descripción del proyecto. 
