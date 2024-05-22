@@ -51,6 +51,7 @@ Los pasos solicitados para completar este desafío:
 ![Static Badge](https://img.shields.io/badge/API-Gutendex-%23e90000)
 [![Static Badge](https://img.shields.io/badge/JSON--In--Java--20220320-JAR-blue)](*) 
 [![Static Badge](https://img.shields.io/badge/Git-Github-blue?style=flat&logo=GitHub)](https://github.com/)
+![Static Badge](https://img.shields.io/badge/PostgresSQL-%234169E1?style=flat&logo=PostgreSQL&logoColor=white)
 [![Static Badge](https://img.shields.io/badge/Postman-gray?style=flat&logo=Postman&logoColor=orange)](https://www.postman.com/)
 [![Static Badge](https://img.shields.io/badge/app-Trello-%231466c3?style=flat&logo=trello)](https://trello.com/)
 
@@ -813,7 +814,7 @@ Uno de los pasos más importantes al participar en una selección de trabajo es 
 Este mismo archivo que se esta leyendo fue el resultado del README para el Challenge.
 
 
-### 13.	**Extra (Opcional)**
+### 13.	**Extra (Opcional)** [![Static Badge](https://img.shields.io/badge/status-OK-gree)](#)
 
 Se nos propueso nn caso que quiecieramos desafiarnos aún más y proporcionar a los usuarios una experiencia más rica y personalizada, hay diversas funcionalidades interesantes que puedes explorar:
 
@@ -869,7 +870,7 @@ Presentar los datos de los 10 libros más descargados, siendo una consulta direc
 // Resto del código omitido...
 ```
 
-#### 13.3 Buscar autor por nombre: 
+#### 13.3 Buscar autor por nombre [![Static Badge](https://img.shields.io/badge/status-OK-gree)](#)
 
    Si has echado un vistazo al sitio de la API es posible realizar la búsqueda de libro o autor con la consulta hecha con search? - sin embargo, en este caso te desafiamos a realizar la consulta por nombre de autor en la base de datos creada para nuestro proyecto.
 
@@ -904,7 +905,7 @@ Presentar los datos de los 10 libros más descargados, siendo una consulta direc
 ```
 &nbsp;
 
-#### 13.4. **Listar autores con otras consultas**:
+#### 13.4. Listar autores con otras consultas. [![Static Badge](https://img.shields.io/badge/status-OK-gree)](#)
 
   Implementar otras consultas con los atributos de año de nacimiento y fallecimiento de los autores. Siéntete libre de explorar e implementar estas características adicionales.
   
