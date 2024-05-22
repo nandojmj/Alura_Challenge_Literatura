@@ -568,6 +568,7 @@ public class LiteraturaApplication implements CommandLineRunner {
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
 [![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
 ![Static Badge](https://img.shields.io/badge/API-Gutendex-%23e90000)
+ ![Static Badge](https://img.shields.io/badge/PostgresSQL-%234169E1?style=flat&logo=PostgreSQL&logoColor=white)
 [![Static Badge](https://img.shields.io/badge/Pruebas_finales-%2340a5ff?style=flat)](#)
 
 En esta parte del desafio, realizamos la consulta por título del libro en la API para retener el primer resultado obtenido. Un libro debe tener los siguientes atributos:
@@ -612,6 +613,7 @@ public record DatosLibro(
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
 [![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
 ![Static Badge](https://img.shields.io/badge/API-Gutendex-%23e90000)
+ ![Static Badge](https://img.shields.io/badge/PostgresSQL-%234169E1?style=flat&logo=PostgreSQL&logoColor=white)
 [![Static Badge](https://img.shields.io/badge/Pruebas_finales-%2340a5ff?style=flat)](#)
 
 Como podemos ver en el sitio web de la API, cada libro tiene datos relacionados con sus autores, en este caso el cuerpo de json recibe una lista de autores por libro, donde cada autor tiene tres características:
@@ -725,6 +727,7 @@ public interface AutorRepository extends JpaRepository<Autor,Long> {
   ### 10. Listando libros por idiomas
 [![Static Badge](https://img.shields.io/badge/IDE-IntelliJ_IDEA-%23ff0534?style=flat&logo=IntelliJ%20IDEA&logoColor=%232196f3)](https://www.jetbrains.com/es-es/idea/) 
 [![Static Badge](https://img.shields.io/badge/Language-Java-%23ff0000?style=flat)](#)
+ ![Static Badge](https://img.shields.io/badge/PostgresSQL-%234169E1?style=flat&logo=PostgreSQL&logoColor=white)
 [![Static Badge](https://img.shields.io/badge/Pruebas_finales-%2340a5ff?style=flat)](#)
 
 Se nos solicito que una vez que ya tienes libros y autores guardados en tu base de datos, aprovechar los recursos de Streams de Java y derived queries para brindar tu usuario con estadísticas sobre la cantidad de libros en un determinado idioma en la base de datos.
