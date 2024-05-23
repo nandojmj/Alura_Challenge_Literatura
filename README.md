@@ -1072,3 +1072,6 @@ FUERA O EN RELACIÓN CON EL SOFTWARE O EL USO U OTROS TRATOS EN EL
 SOFTWARE.
 
 ```
+### Insignia Exclusiva para este Challenge - Entregado
+
+![badge literalura](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/a1cc98e3-3046-4996-b631-d6b76477a898)
