@@ -61,9 +61,9 @@ Los pasos solicitados para completar este desafío:
 En esta primera fase, nos piden que se lleve a cabo la instalación y la configuración del entorno de desarrollo Java para nuestro desafío de construcción del desafio Literatura en un proyecto Spring. Asegúrate de contar con los siguientes programas, archivos y versiones:
 - IntelliJ IDEA Community Edition
 - Java JDK: versión: 17 en adelante
-- Maven: versión 4 en adelante
+- Maven
 - Spring: versión 3.2.3 - https://start.spring.io/
-- Postgres: versión 16 en adelante
+- Postgres
 - JSON en Java y la librería Gson
 - Git y GitHub 
 - Postman
