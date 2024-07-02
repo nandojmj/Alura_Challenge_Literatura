@@ -1,4 +1,5 @@
-![BG_ZOOM_ONE_ESP_(1) 1](https://github.com/nandojmj/Alura_Challenge_API_REST_Foro_hub/assets/156966097/156160d0-e44d-48a5-bb3e-214732caacf1)
+
+![BG_ZOOM_ONE_ESP_(1) 1](https://github.com/nandojmj/Alura_Challenge_Literatura/assets/156966097/df2ed853-d338-4ba8-b8f3-e53b101b1eff)
 
 ## Open Challenge Backend ONE - LITERATURA
  ***ONE | Fase 3 - Especialización Back-End  G6 Alura - Oracle Next Education***
